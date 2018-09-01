@@ -23,6 +23,7 @@ Partial Class frmMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.ScreenImgBox = New System.Windows.Forms.PictureBox()
         Me.Ticker = New System.Windows.Forms.Timer(Me.components)
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -50,9 +51,10 @@ Partial Class frmMain
         Me.BackColor = System.Drawing.Color.DimGray
         Me.ClientSize = New System.Drawing.Size(800, 600)
         Me.Controls.Add(Me.ScreenImgBox)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Tesla Toy"
+        Me.Text = "Particle Toy"
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
