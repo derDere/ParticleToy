@@ -41,9 +41,11 @@
                 End If
             End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
-            For Each P In PL
-                P.Update(Me, Tick, MouseInfo, Keyboard)
-            Next
+            If Not DrawInfo Then
+                For Each P In PL
+                    P.Update(Me, Tick, MouseInfo, Keyboard)
+                Next
+            End If
         End If
     End Sub
 

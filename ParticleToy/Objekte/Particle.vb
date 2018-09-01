@@ -58,6 +58,7 @@
     Private Shared ElectricAngles As Double() = {0, 45, 90, 135, 180, 225, 270, 315}
     Private IsAStar As Boolean = False
     Private Partner As Particle = Nothing
+    Private MirrorPoint As Point? = Nothing
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
         'Normalisierung
@@ -85,10 +86,13 @@
         If Ancs.Anchors.Count <> GROUPED Then
             Partner = Nothing
         End If
+        If Ancs.Anchors.Count <> MIRRORED Then
+            MirrorPoint = Nothing
+        End If
 
         'Verhalten
         '#######################################################################################
-        If Ancs.Anchors.Count = ROAMING Then 'Freilaufend =============================================
+        If Ancs.Anchors.Count = ROAMING Then 'Freilaufend 0 =============================================
             TargetSpeed = MIN_SPEED
             If MouseInfo.Position IsNot Nothing AndAlso DeltaBetweed(CurrentPosition, MouseInfo.Position) < ASIDE_RADIUS Then
                 TargetAngel = XYToDegrees(CurrentPosition, MouseInfo.Position)
@@ -96,7 +100,7 @@
                 TargetAngel = RndDegrees()
             End If
 
-        ElseIf Ancs.Anchors.Count = TESLA Then 'Tesla =============================================
+        ElseIf Ancs.Anchors.Count = TESLA Then 'Tesla 1 =============================================
             TargetSpeed = APROACH_SPEED
             Dim DeltaToAnc As Double = DeltaBetweed(CurrentPosition, Ancs.Anchors(0))
             If DeltaToAnc < (BOUNCE_RADIUS + 20) Then
@@ -112,18 +116,19 @@
                 TargetAngel = RndDirectedAngel(XYToDegrees(Ancs.Anchors(0), CurrentPosition), 45)
             End If
 
-        ElseIf Ancs.Anchors.Count = TELEPORT Then 'Teleportierend =============================================
+        ElseIf Ancs.Anchors.Count = TELEPORT Then 'Teleportierend 2 =============================================
             TargetSpeed = APROACH_SPEED
-            TargetAngel = RndDirectedAngel(XYToDegrees(Ancs.Anchors(0), CurrentPosition), 45)
-            If DeltaBetweed(CurrentPosition, Ancs.Anchors(0)) < BOUNCE_RADIUS Then
+            TargetAngel = RndDirectedAngel(XYToDegrees(Ancs.Anchors(0), CurrentPosition), 180)
+            If DeltaBetweed(CurrentPosition, Ancs.Anchors(0)) < ASIDE_RADIUS Then
                 Lightnight = Ancs.Anchors(0)
-                CurrentPosition = Ancs.Anchors(1)
-                LastPosition = CurrentPosition
                 CurrentSpeed = MAX_SPEED
                 CurrentAngel = RndDegrees()
+                CurrentPosition = DegreesToXY(CurrentAngel, BOUNCE_RADIUS, Ancs.Anchors(1))
+                CurrentAngel = RndDegrees()
+                LastPosition = CurrentPosition
             End If
 
-        ElseIf Ancs.Anchors.Count = COLLECTING Then 'Sammelnd =============================================
+        ElseIf Ancs.Anchors.Count = COLLECTING Then 'Sammelnd 3 =============================================
             TargetSpeed = APROACH_SPEED
             If AnchorCenter Is Nothing Then
                 AnchorCenter = CenterOfPoints(Ancs.Anchors.ToArray)
@@ -135,7 +140,7 @@
                 TargetAngel = RndDirectedAngel(XYToDegrees(AnchorCenter, CurrentPosition), 90)
             End If
 
-        ElseIf Ancs.Anchors.Count = CYCLING Then 'Keisend =============================================
+        ElseIf Ancs.Anchors.Count = CYCLING Then 'Keisend 4 =============================================
             If Not SpeedIsSet Then
                 SpeedIsSet = True
                 TargetSpeed = RndSpeed()
@@ -156,6 +161,7 @@
             Else
                 Dim AnchorDelta As Double = DeltaBetweed(CurrentPosition, SortedAnchors(AnchorIndex))
                 If AnchorDelta < BOUNCE_RADIUS Then
+                    Lightnight = SortedAnchors(AnchorIndex)
                     AnchorIndex += AnchorStep
                     If AnchorIndex >= SortedAnchors.Count Then AnchorIndex = 0
                     If AnchorIndex < 0 Then AnchorIndex = SortedAnchors.Count - 1
@@ -163,7 +169,7 @@
                 TargetAngel = RndDirectedAngel(XYToDegrees(SortedAnchors(AnchorIndex), CurrentPosition), 135)
             End If
 
-        ElseIf Ancs.Anchors.Count = FLOWING Then 'Fliesend =============================================
+        ElseIf Ancs.Anchors.Count = FLOWING Then 'Fliesend 5 =============================================
             If Not SpeedIsSet Then
                 SpeedIsSet = True
             End If
@@ -185,7 +191,7 @@
                 TargetAngel = RndDirectedAngel(315, 90)
             End If
 
-        ElseIf Ancs.Anchors.Count = ELECTRIC Then 'Electrich =============================================
+        ElseIf Ancs.Anchors.Count = ELECTRIC Then 'Electrich 6 =============================================
             If Not IsElectric Then
                 IsElectric = True
                 TargetSpeed = RndSpeed()
@@ -201,7 +207,7 @@
             End If
             CurrentColor = New Pen(Drawing.Color.FromArgb(255, 0, G, 192))
 
-        ElseIf Ancs.Anchors.Count = SYNCED Then 'Syncron =============================================
+        ElseIf Ancs.Anchors.Count = SYNCED Then 'Syncron 7 =============================================
             TargetSpeed = MAX_SPEED
             Dim Rocks As New List(Of Point)
             Rocks.Add(MouseInfo.Position)
@@ -218,7 +224,7 @@
                 TargetAngel = ElectricAngles(RND.Next(1000) Mod ElectricAngles.Length)
             End If
 
-        ElseIf Ancs.Anchors.Count = STADDY Then 'Unbeweglich =============================================
+        ElseIf Ancs.Anchors.Count = STADDY Then 'Unbeweglich 8 =============================================
             TargetSpeed = 0
             TargetAngel = RndDegrees()
             Dim Rocks As New List(Of Point)
@@ -245,7 +251,7 @@
             Dim G As Integer = 255 - (RND.Next(1000) Mod 64)
             CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, G, 192))
 
-        ElseIf Ancs.Anchors.Count = MIRRORED Then 'Gespiegelt =============================================
+        ElseIf Ancs.Anchors.Count = MIRRORED Then 'Gespiegelt 9 =============================================
             If (MyIndex Mod 2) = 0 Then
                 Dim p As Double = CurrentPosition.Y / Game.ScreenSize.Height
                 TargetSpeed = MIN_SPEED + ((MAX_SPEED - MIN_SPEED) * p)
@@ -253,7 +259,12 @@
                 If MouseInfo.Position IsNot Nothing AndAlso DeltaBetweed(CurrentPosition, MouseInfo.Position) < ASIDE_RADIUS Then
                     TargetAngel = XYToDegrees(CurrentPosition, MouseInfo.Position)
                 Else
-                    TargetAngel = RndDegrees()
+                    If MirrorPoint Is Nothing Then
+                        MirrorPoint = Ancs.Anchors(RND.Next(1000) Mod Ancs.Anchors.Count)
+                    ElseIf DeltaBetweed(CurrentPosition, MirrorPoint.Value) < BOUNCE_RADIUS Then
+                        MirrorPoint = Ancs.Anchors(RND.Next(1000) Mod Ancs.Anchors.Count)
+                    End If
+                    TargetAngel = RndDirectedAngel(XYToDegrees(MirrorPoint, CurrentPosition), 180)
                 End If
                 Dim G As Integer = ((((CurrentPosition.X + CurrentPosition.Y) / 2) + (2 * Tick)) Mod 256)
                 If G < 128 Then
@@ -270,7 +281,7 @@
                 Exit Sub
             End If
 
-        ElseIf Ancs.Anchors.Count = STARS Then 'Sterne =============================================
+        ElseIf Ancs.Anchors.Count = STARS Then 'Sterne 10 =============================================
             If Not IsAStar Then
                 IsAStar = True
                 TargetSpeed = MIN_SPEED + (RND.Next(1000) Mod 2)
@@ -302,7 +313,7 @@
                     CurrentColor = New Pen(Drawing.Color.FromArgb(255, ColorVal - (RedLevel * 0.3333), ColorVal - RedLevel, ColorVal))
             End Select
 
-        ElseIf Ancs.Anchors.Count = GROUPED Then 'Gruppierd =============================================
+        ElseIf Ancs.Anchors.Count = GROUPED Then 'Gruppierd 11 =============================================
             If Partner Is Nothing OrElse Partner Is Me Then
                 If (MyIndex Mod GROUP_SIZE) = 0 Then
                     Partner = Parent.PL((MyIndex + 1) Mod Parent.PL.Count)
