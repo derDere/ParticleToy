@@ -1,6 +1,6 @@
 ﻿Public Class frmMain
 
-    Const Title As String = "Tesla Toy"
+    Const Title As String = "Particle Toy"
 
     Public Shared ReadOnly CursorDefault As Cursor
     Public Shared ReadOnly CursorRed As Cursor
@@ -92,7 +92,7 @@
         Ticker.Interval = TickDelay
         Dim ts As Integer = SW.ElapsedMilliseconds
         If ts < 16 Then ts = 16
-        Me.Text = Math.Round(1000 / ts, 1) & " FPS"
+        Me.Text = Title & "  ‒  " & Math.Round(1000 / ts).ToString("00") & " FPS  ‒  " & DirectCast(Game, Game).Ancs.Anchors.Count & " Anchors"
 
         KeyBoardInfo.LastKeys = KeyInf.KeysDown
 
