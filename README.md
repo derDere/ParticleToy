@@ -11,3 +11,5 @@ the usb stick I had all my school projects on broke :D yeay that was fun.
 I tryed recreating it (Version 2) but I was frustrated so I never really finished it.
 But not I was fiddeling around and reprogrammed it to remember the good
 old times :) So here you go with my Version 3 have fun.
+
+This Application was inspiered by an iOS App named TeslaToy.
