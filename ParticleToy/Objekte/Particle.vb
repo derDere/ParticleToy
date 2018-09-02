@@ -1,5 +1,7 @@
 ﻿Public Class Particle
 
+    Public Shared ReadOnly ElectricAngles As Double() = {0, 45, 90, 135, 180, 225, 270, 315}
+
     Const ROAMING As Integer = 0
     Const TESLA As Integer = 1
     Const TELEPORT As Integer = 2
@@ -34,6 +36,8 @@
     Public TargetAngel As Double = 0
     Public TargetSpeed As Double = MIN_SPEED
     Public Lightnight As Point? = Nothing
+    Public Glowing As Integer = 0
+    Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
 
     Public Sub New(Ancs As Anchors, Position As Point, Index As Integer, Parent As Game)
         Me.Parent = Parent
@@ -55,7 +59,6 @@
     Private AnchorStep As Integer = 0
     Private SpeedIsSet As Boolean = False
     Private IsElectric As Boolean = False
-    Private Shared ElectricAngles As Double() = {0, 45, 90, 135, 180, 225, 270, 315}
     Private IsAStar As Boolean = False
     Private Partner As Particle = Nothing
     Private MirrorPoint As Point? = Nothing
@@ -395,6 +398,12 @@
             LastPosition = CurrentPosition
             Lightnight = Nothing
         End If
+
+        'Glowing Pen Update
+        '#######################################################################################
+        Glowing -= 2
+        If Glowing < 0 Then Glowing = 0
+        GlowingPen = New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255))
     End Sub
 
     Private Shared LightningPen As New Pen(Drawing.Color.FromArgb(64, 255, 255, 255), 1)
@@ -403,6 +412,9 @@
             G.DrawLine(LightningPen, CurrentPosition, Lightnight.Value)
         End If
         G.DrawLine(CurrentColor, LastPosition, CurrentPosition)
+        If Glowing > 0 Then
+            G.DrawEllipse(GlowingPen, CurrentPosition.X - 1, CurrentPosition.Y - 1, 3, 3)
+        End If
     End Sub
 
     Public Sub MoveTo(NewPosition As Point?)
