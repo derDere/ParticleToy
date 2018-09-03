@@ -14,6 +14,7 @@
     Const MIRRORED As Integer = 9
     Const STARS As Integer = 10
     Const GROUPED As Integer = 11
+    Const GAME_OF_LIFE As Integer = 12
 
     Const MAX_SPEED As Double = 10
     Const MIN_SPEED As Double = 1
@@ -31,13 +32,20 @@
     Private CurrentAngel As Double = 0
     Private CurrentSpeed As Double = MIN_SPEED
     Private CurrentColor As Pen
+    Private CurrentColorBru As SolidBrush
 
     Public Color As Pen = Pens.White
     Public TargetAngel As Double = 0
     Public TargetSpeed As Double = MIN_SPEED
     Public Lightnight As Point? = Nothing
-    Public Glowing As Integer = 0
-    Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
+    Public Glowing As Boolean = False
+    'Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
+
+    Private GolPos As Point
+    Public Shared ReadOnly GolQuader As Integer = Math.Sqrt(Game.PARTICLE_NUMBER)
+    Public GOL_MARGIN As Integer = 5
+    Public Shared Gol_Matrix(GolQuader, GolQuader) As Particle
+    Public GolMP As Point
 
     Public Sub New(Ancs As Anchors, Position As Point, Index As Integer, Parent As Game)
         Me.Parent = Parent
@@ -51,10 +59,22 @@
         CurrentPosition = Position
         LastPosition = Position
         Me.Ancs = Ancs
+        'Calculate GameOfLife Position
+        Dim X As Integer = MyIndex Mod GolQuader
+        Dim Y As Integer = (MyIndex - (MyIndex Mod GolQuader)) / GolQuader
+        GolPos = New Point((X * GOL_MARGIN) + ((Game.OPT_SIZE_W - (GolQuader * GOL_MARGIN)) / 2),
+                           (Y * GOL_MARGIN) + ((Game.OPT_SIZE_H - (GolQuader * GOL_MARGIN)) / 2))
+        GolMP = New Point(X, Y)
+        If Gol_Matrix(X, Y) Is Nothing Then
+            Gol_Matrix(X, Y) = Me
+        Else
+            Stop
+        End If
     End Sub
 
     Public Shared AnchorCenter As Point? = Nothing
     Public Shared SortedAnchors As New List(Of Point)
+    Public WillGlow As Boolean = False
     Private AnchorIndex As Integer = -1
     Private AnchorStep As Integer = 0
     Private SpeedIsSet As Boolean = False
@@ -62,6 +82,8 @@
     Private IsAStar As Boolean = False
     Private Partner As Particle = Nothing
     Private MirrorPoint As Point? = Nothing
+    Private HideNoMovement As Boolean = True
+    Private GolStatusSet As Boolean = False
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
         'Normalisierung
@@ -92,6 +114,12 @@
         If Ancs.Anchors.Count <> MIRRORED Then
             MirrorPoint = Nothing
         End If
+        If Ancs.Anchors.Count <> GAME_OF_LIFE Then
+            GolStatusSet = False
+            WillGlow = False
+            Glowing = False
+        End If
+        HideNoMovement = Ancs.Anchors.Count <> GAME_OF_LIFE
 
         'Verhalten
         '#######################################################################################
@@ -353,12 +381,63 @@
                 Next
             End If
 
+        ElseIf Ancs.Anchors.Count = GAME_OF_LIFE Then 'Game of Life 12 =============================================
+            If Not GolStatusSet Then
+                WillGlow = (RND.Next(1000) Mod 5) = 0
+                Glowing = IIf(WillGlow, 100, 0)
+                GolStatusSet = True
+            Else
+                If (Tick Mod 2) = 0 Then
+                    Dim Sum As Integer = 0
+
+                    If GolMN(GolMP.X - 1, GolMP.Y - 1).Glowing Then Sum += 1
+                    If GolMN(GolMP.X - 0, GolMP.Y - 1).Glowing Then Sum += 1
+                    If GolMN(GolMP.X + 1, GolMP.Y - 1).Glowing Then Sum += 1
+                    If GolMN(GolMP.X - 1, GolMP.Y - 0).Glowing Then Sum += 1
+                    If GolMN(GolMP.X + 1, GolMP.Y - 0).Glowing Then Sum += 1
+                    If GolMN(GolMP.X - 1, GolMP.Y + 1).Glowing Then Sum += 1
+                    If GolMN(GolMP.X - 0, GolMP.Y + 1).Glowing Then Sum += 1
+                    If GolMN(GolMP.X + 1, GolMP.Y + 1).Glowing Then Sum += 1
+
+                    If Sum < 2 Then WillGlow = False
+                    If Sum = 3 Then WillGlow = True
+                    If Sum > 3 Then WillGlow = False
+
+                    Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+                    If MouseDelta < ASIDE_RADIUS Then
+                        If (RND.Next(1000) Mod 20) = 0 Then
+                            WillGlow = True
+                        End If
+                    End If
+                End If
+            End If
+            TargetSpeed = MAX_SPEED
+            Dim delta As Integer = DeltaBetweed(CurrentPosition, GolPos)
+            If delta < BOUNCE_RADIUS * 2 Then
+                TargetSpeed = APROACH_SPEED
+            End If
+            If delta < BOUNCE_RADIUS Then
+                TargetSpeed = MIN_SPEED
+                CurrentSpeed = MIN_SPEED
+            End If
+            If delta < APROACH_SPEED Then
+                CurrentPosition = GolPos
+                CurrentSpeed = 0
+                TargetSpeed = 0
+            Else
+                TargetAngel = XYToDegrees(GolPos, CurrentPosition)
+            End If
+
         Else
             If TargetAngel = 0 Then TargetAngel = RndDegrees()
             TargetSpeed = MIN_SPEED
             CurrentColor = RandomColor()
 
         End If
+
+        'Farb Gleichsetzung
+        '#######################################################################################
+        CurrentColorBru = New SolidBrush(CurrentColor.Color)
 
         'Steuerung
         '#######################################################################################
@@ -401,9 +480,11 @@
 
         'Glowing Pen Update
         '#######################################################################################
-        Glowing -= 2
-        If Glowing < 0 Then Glowing = 0
-        GlowingPen = New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255))
+        'If Ancs.Anchors.Count <> GAME_OF_LIFE Then
+        '    Glowing -= 2
+        '    If Glowing < 0 Then Glowing = 0
+        'End If
+        'GlowingPen = New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255))
     End Sub
 
     Private Shared LightningPen As New Pen(Drawing.Color.FromArgb(64, 255, 255, 255), 1)
@@ -411,9 +492,14 @@
         If Lightnight IsNot Nothing Then
             G.DrawLine(LightningPen, CurrentPosition, Lightnight.Value)
         End If
-        G.DrawLine(CurrentColor, LastPosition, CurrentPosition)
-        If Glowing > 0 Then
-            G.DrawEllipse(GlowingPen, CurrentPosition.X - 1, CurrentPosition.Y - 1, 3, 3)
+        If LastPosition <> CurrentPosition Then
+            G.DrawLine(CurrentColor, LastPosition, CurrentPosition)
+        ElseIf Not HideNoMovement Then
+            G.FillRectangle(CurrentColorBru, CurrentPosition.X, CurrentPosition.Y, 1, 1)
+        End If
+        If Glowing Then
+            'G.DrawRectangle(GlowingPen, CurrentPosition.X - 1, CurrentPosition.Y - 1, 2, 2)
+            G.FillRectangle(Brushes.White, CurrentPosition.X, CurrentPosition.Y, 1, 1)
         End If
     End Sub
 
@@ -422,7 +508,7 @@
         CurrentPosition = NewPosition
     End Sub
 
-    <DebuggerHidden> _
+    <DebuggerHidden>
     Public Function RndSpeed() As Double
         Return (RND.Next(1000) Mod ((MAX_SPEED - MIN_SPEED) * 0.75)) + MIN_SPEED
     End Function
@@ -438,6 +524,15 @@
                                Return -1
                            End Function)
     End Sub
+
+    <DebuggerHidden>
+    Private Shared Function GolMN(X As Integer, Y As Integer) As Particle
+        If X < 0 Then X += GolQuader
+        If Y < 0 Then Y += GolQuader
+        If X >= GolQuader Then X = X Mod GolQuader
+        If Y >= GolQuader Then Y = Y Mod GolQuader
+        Return Gol_Matrix(X, Y)
+    End Function
 
 End Class
 

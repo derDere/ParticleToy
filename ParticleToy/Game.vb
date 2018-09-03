@@ -16,9 +16,13 @@
     Public PL As New List(Of Particle)
     Public Menu As New Menu(Me)
 
+    Public Const OPT_SIZE_W As Integer = 800
+    Public Const OPT_SIZE_H As Integer = 600
+    Public Const PARTICLE_NUMBER As Integer = 10000
+
     Public Overrides Sub Init()
-        MyBase._ScreenSize = New Size(800, 600) ' My.Computer.Screen.Bounds.Size
-        For index = 1 To 10000
+        MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
+        For index = 1 To PARTICLE_NUMBER
             PL.Add(New Particle(Ancs, RndPoint(ScreenSize), index - 1, Me))
         Next
     End Sub
@@ -45,6 +49,13 @@
                 For Each P In PL
                     P.Update(Me, Tick, MouseInfo, Keyboard)
                 Next
+                For Each P In PL
+                    If P.WillGlow Then
+                        P.Glowing = True
+                    Else
+                        P.Glowing = 0
+                    End If
+                Next
             End If
         End If
     End Sub
@@ -54,7 +65,7 @@
         G.FillRectangle(ClearBru, 0, 0, ScreenSize.Width, ScreenSize.Height)
 
         'Setup
-        G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        'G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         'Draw Particles
         For Each P In PL
