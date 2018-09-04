@@ -84,6 +84,7 @@
     Private MirrorPoint As Point? = Nothing
     Private HideNoMovement As Boolean = True
     Private GolStatusSet As Boolean = False
+    Private GolPositionFound As Boolean = False
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
         'Normalisierung
@@ -118,6 +119,7 @@
             GolStatusSet = False
             WillGlow = False
             Glowing = False
+            GolPositionFound = False
         End If
         HideNoMovement = Ancs.Anchors.Count <> GAME_OF_LIFE
 
@@ -424,8 +426,18 @@
                 CurrentPosition = GolPos
                 CurrentSpeed = 0
                 TargetSpeed = 0
+                GolPositionFound = True
             Else
                 TargetAngel = XYToDegrees(GolPos, CurrentPosition)
+            End If
+            If GolPositionFound Then
+                Dim AncDelta As Double = Double.MaxValue
+                For Each Anc As Point In Ancs.Anchors
+                    Dim d As Double = DeltaBetweed(GolPos, Anc)
+                    If d < AncDelta Then AncDelta = d
+                Next
+                Dim m As Double = Math.Cos((AncDelta) / 10 + (-Tick / 10))
+                CurrentPosition = New Point(GolPos.X, GolPos.Y - (5 * m))
             End If
 
         Else
@@ -498,8 +510,8 @@
             G.FillRectangle(CurrentColorBru, CurrentPosition.X, CurrentPosition.Y, 1, 1)
         End If
         If Glowing Then
-            'G.DrawRectangle(GlowingPen, CurrentPosition.X - 1, CurrentPosition.Y - 1, 2, 2)
-            G.FillRectangle(Brushes.White, CurrentPosition.X, CurrentPosition.Y, 1, 1)
+            G.DrawRectangle(Pens.White, CurrentPosition.X - 1, CurrentPosition.Y - 1, 2, 2)
+            'G.FillRectangle(Brushes.White, CurrentPosition.X, CurrentPosition.Y, 1, 1)
         End If
     End Sub
 
