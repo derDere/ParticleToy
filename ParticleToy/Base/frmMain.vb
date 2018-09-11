@@ -12,6 +12,10 @@
     Private MouseW As Integer = 0
     Private PressedKeys As New List(Of Keys)
 
+    Private Recording As Boolean = False
+    Private RecordingFrame As Integer = 0
+    Private RecordingDir As IO.DirectoryInfo = Nothing
+
     Private Game As GameBase = New Game
     Private Tick As Integer = 0
     Private B As Bitmap
@@ -81,6 +85,14 @@
             Game.Draw(G)
         End Using
 
+        If Recording Then
+            RecordingFrame += 1
+            Dim Path As String = RecordingDir.FullName
+            If Not Path.EndsWith("\") Then Path &= "\"
+            Path &= RecordingFrame & ".png"
+            B.Save(Path, Imaging.ImageFormat.Png)
+        End If
+
         ScreenImgBox.Image = B
 
         MouseW = 0
@@ -92,7 +104,7 @@
         Ticker.Interval = TickDelay
         Dim ts As Integer = SW.ElapsedMilliseconds
         If ts < 16 Then ts = 16
-        Me.Text = Title & "  ‒  " & Math.Round(1000 / ts).ToString("00") & " FPS  ‒  " & DirectCast(Game, Game).Ancs.Anchors.Count & " Anchors"
+        Me.Text = Title & "  ‒  " & Math.Round(1000 / ts).ToString("00") & " FPS  ‒  " & DirectCast(Game, Game).Ancs.Anchors.Count & " Anchors" & IIf(Recording, " ‒ Recording", "")
 
         KeyBoardInfo.LastKeys = KeyInf.KeysDown
 
@@ -138,8 +150,43 @@
     Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         If Not PressedKeys.Contains(e.KeyCode) Then _
             PressedKeys.Add(e.KeyCode)
-        If e.KeyCode = Keys.F11 Then
+        If e.KeyCode = Keys.F11 AndAlso e.Modifiers = Keys.Control Then
             FullScreen = Not FullScreen
+        End If
+        If e.KeyCode = Keys.R Then
+            If Recording Then
+                Recording = False
+                RecordingDir = Nothing
+                RecordingFrame = 0
+            Else
+                Ticker.Enabled = False
+                If SaveDirDialog.ShowDialog = DialogResult.OK Then
+                    Dim di As New IO.DirectoryInfo(SaveDirDialog.FileName)
+                    If Not IO.Directory.Exists(di.FullName) Then
+                        Try
+                            IO.Directory.CreateDirectory(di.FullName)
+                            RecordingDir = di
+                        Catch ex As Exception
+                            If Debugger.IsAttached Then
+                                Throw ex
+                            End If
+                            MsgBox("Couldn't create frame folder!", MsgBoxStyle.OkOnly, "Canceled!")
+                            Ticker.Enabled = True
+                            Exit Sub
+                        End Try
+                    Else
+                        MsgBox("The choosen folder already exists!", vbOKOnly, "Error")
+                        Ticker.Enabled = True
+                        Exit Sub
+                    End If
+                    If RecordingDir IsNot Nothing Then
+                        MsgBox("All frames will now be saved to the selected folder until you press [R] again! Whatch your drive space ;)", vbOKOnly, "Attention")
+                        Recording = True
+                        RecordingFrame = 0
+                    End If
+                End If
+                Ticker.Enabled = True
+            End If
         End If
     End Sub
     Private Sub frmMain_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp

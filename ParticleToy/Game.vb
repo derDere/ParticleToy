@@ -44,6 +44,25 @@
                     Debug.WriteLine("clear")
                 End If
             End If
+            Dim FunctionKeySetAncorCount As Integer = 0
+            If Keyboard.Pressed(Keys.F1) Then FunctionKeySetAncorCount = 1
+            If Keyboard.Pressed(Keys.F2) Then FunctionKeySetAncorCount = 2
+            If Keyboard.Pressed(Keys.F3) Then FunctionKeySetAncorCount = 3
+            If Keyboard.Pressed(Keys.F4) Then FunctionKeySetAncorCount = 4
+            If Keyboard.Pressed(Keys.F5) Then FunctionKeySetAncorCount = 5
+            If Keyboard.Pressed(Keys.F6) Then FunctionKeySetAncorCount = 6
+            If Keyboard.Pressed(Keys.F7) Then FunctionKeySetAncorCount = 7
+            If Keyboard.Pressed(Keys.F8) Then FunctionKeySetAncorCount = 8
+            If Keyboard.Pressed(Keys.F9) Then FunctionKeySetAncorCount = 9
+            If Keyboard.Pressed(Keys.F10) Then FunctionKeySetAncorCount = 10
+            If Keyboard.Pressed(Keys.F11) Then FunctionKeySetAncorCount = 11
+            If Keyboard.Pressed(Keys.F12) Then FunctionKeySetAncorCount = 12
+            If FunctionKeySetAncorCount <> 0 Then
+                FixedAncors.Anchors.Clear()
+                For n = 1 To FunctionKeySetAncorCount
+                    FixedAncors.Anchors.Add(RndPoint(ScreenSize))
+                Next
+            End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
             If Not DrawInfo Then
                 For Each P In PL

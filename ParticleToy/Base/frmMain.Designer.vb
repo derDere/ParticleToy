@@ -26,6 +26,7 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.ScreenImgBox = New System.Windows.Forms.PictureBox()
         Me.Ticker = New System.Windows.Forms.Timer(Me.components)
+        Me.SaveDirDialog = New System.Windows.Forms.SaveFileDialog()
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -44,6 +45,13 @@ Partial Class frmMain
         '
         Me.Ticker.Interval = 16
         '
+        'SaveDirDialog
+        '
+        Me.SaveDirDialog.AddExtension = False
+        Me.SaveDirDialog.FileName = "UnknownFrameFolder"
+        Me.SaveDirDialog.OverwritePrompt = False
+        Me.SaveDirDialog.Title = "Choose target folder"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -61,5 +69,5 @@ Partial Class frmMain
     End Sub
     Friend WithEvents ScreenImgBox As System.Windows.Forms.PictureBox
     Friend WithEvents Ticker As System.Windows.Forms.Timer
-
+    Friend WithEvents SaveDirDialog As SaveFileDialog
 End Class

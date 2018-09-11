@@ -405,10 +405,12 @@
                     If Sum = 3 Then WillGlow = True
                     If Sum > 3 Then WillGlow = False
 
-                    Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
-                    If MouseDelta < ASIDE_RADIUS Then
-                        If (RND.Next(1000) Mod 20) = 0 Then
-                            WillGlow = True
+                    If MouseInfo.Position IsNot Nothing Then
+                        Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+                        If MouseDelta < ASIDE_RADIUS Then
+                            If (RND.Next(1000) Mod 20) = 0 Then
+                                WillGlow = True
+                            End If
                         End If
                     End If
                 End If

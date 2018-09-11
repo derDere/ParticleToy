@@ -59,5 +59,14 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to .
+        '''</summary>
+        Friend ReadOnly Property README() As String
+            Get
+                Return ResourceManager.GetString("README", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace
