@@ -1,7 +1,25 @@
 ﻿Public Class Game
     Inherits GameBase
 
-    Public ClearBru As New SolidBrush(Color.FromArgb(44, 0, 0, 0))
+    Public ClearColor1 As Color = Color.FromArgb(44, 9, 32, 0)
+    Public ClearColor2 As Color = Color.FromArgb(44, 0, 0, 0)
+    Public ClearColor3 As Color = Color.FromArgb(44, 36, 0, 61)
+    Public ClearBru As New Drawing2D.LinearGradientBrush(New Point(0, 0), New Point(OPT_SIZE_W, OPT_SIZE_H), ClearColor2, ClearColor2) With {
+        .InterpolationColors = New Drawing2D.ColorBlend() With {
+            .Colors = {
+                ClearColor1,
+                ClearColor2,
+                ClearColor3
+            },
+            .Positions = {
+                0,
+                0.5,
+                1
+            }
+        }
+    }
+    ' OLD: Public ClearBru As New SolidBrush(Color.FromArgb(44, 0, 0, 0))
+
     Public InfoBgBru As New SolidBrush(Color.FromArgb(192, 0, 0, 0))
     Public InfoLinePen As New Pen(Brushes.White, 3)
     Public Font As New Font("Arial", 15)
