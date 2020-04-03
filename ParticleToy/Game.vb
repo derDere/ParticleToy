@@ -43,10 +43,20 @@ Public Class Game
     Public Const PARTICLE_NUMBER As Integer = 10000
     Public Const HINT_TICK_LENGTH As Integer = 50
 
+    Public Behaviours As New Dictionary(Of String, IBehaviour)
+
+    Private LastBehaviourKey As String = "-1"
+
     Public Overrides Sub Init()
         MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
         For index = 1 To PARTICLE_NUMBER
             PL.Add(New Particle(Ancs, RndPoint(ScreenSize), index - 1, Me))
+        Next
+        For Each ItmType As Type In Reflection.Assembly.GetExecutingAssembly.GetTypes
+            If ItmType.GetInterfaces.Any(Function(I) I.Name = "IBehaviour") Then
+                Dim IBObj As IBehaviour = Activator.CreateInstance(ItmType)
+                Behaviours.Add(IBObj.Key, IBObj)
+            End If
         Next
     End Sub
 
@@ -92,9 +102,32 @@ Public Class Game
             End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
             If Not DrawInfo Then
+                Dim BehaviourKey As String = ""
+                If String.IsNullOrEmpty(Console.EnteredMode) Or String.IsNullOrWhiteSpace(Console.EnteredMode) Then
+                    BehaviourKey = Ancs.Anchors.Count
+                Else
+                    BehaviourKey = Console.EnteredMode
+                End If
+                If Not Behaviours.ContainsKey(BehaviourKey) Then
+                    BehaviourKey = "-1"
+                End If
+                Dim CurrentBehaviour As IBehaviour = Behaviours(BehaviourKey)
+
+                Dim NotBehaviours As New List(Of IBehaviour)
+                If LastBehaviourKey <> BehaviourKey Then
+                    NotBehaviours.Add(Behaviours(LastBehaviourKey))
+                    'For Each Behaviour As IBehaviour In Behaviours.Values
+                    '    If Behaviour.Key <> BehaviourKey Then
+                    '        NotBehaviours.Add(Behaviour)
+                    '    End If
+                    'Next
+                End If
+                LastBehaviourKey = BehaviourKey
+
                 For Each P In PL
-                    P.Update(Me, Tick, MouseInfo, Keyboard)
+                    P.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviours.ToArray)
                 Next
+
                 For Each P In PL
                     If P.WillGlow Then
                         P.Glowing = True

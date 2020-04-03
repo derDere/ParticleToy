@@ -120,6 +120,20 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Objekte\Anchors.vb" />
+    <Compile Include="Objekte\Behaviours\cCollectingBh.vb" />
+    <Compile Include="Objekte\Behaviours\cCyclingBh.vb" />
+    <Compile Include="Objekte\Behaviours\cElectricBh.vb" />
+    <Compile Include="Objekte\Behaviours\cFlowingBh.vb" />
+    <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
+    <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
+    <Compile Include="Objekte\Behaviours\cMirroredBh.vb" />
+    <Compile Include="Objekte\Behaviours\cNoneBh.vb" />
+    <Compile Include="Objekte\Behaviours\cRoamingBh.vb" />
+    <Compile Include="Objekte\Behaviours\cStaddyBh.vb" />
+    <Compile Include="Objekte\Behaviours\cStarsBh.vb" />
+    <Compile Include="Objekte\Behaviours\cSyncedBh.vb" />
+    <Compile Include="Objekte\Behaviours\cTeleportBh.vb" />
+    <Compile Include="Objekte\Behaviours\cTeslaBh.vb" />
     <Compile Include="Objekte\GameConsole.vb" />
     <Compile Include="Base\IBehaviour.vb" />
     <Compile Include="Objekte\Menu.vb" />
@@ -169,9 +183,7 @@
     <Content Include="ParticleToy.ico" />
     <None Include="Resources\b1.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objekte\Behaviours\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
