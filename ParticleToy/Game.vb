@@ -113,19 +113,14 @@ Public Class Game
                 End If
                 Dim CurrentBehaviour As IBehaviour = Behaviours(BehaviourKey)
 
-                Dim NotBehaviours As New List(Of IBehaviour)
+                Dim NotBehaviour As IBehaviour
                 If LastBehaviourKey <> BehaviourKey Then
-                    NotBehaviours.Add(Behaviours(LastBehaviourKey))
-                    'For Each Behaviour As IBehaviour In Behaviours.Values
-                    '    If Behaviour.Key <> BehaviourKey Then
-                    '        NotBehaviours.Add(Behaviour)
-                    '    End If
-                    'Next
+                    NotBehaviour = Behaviours(LastBehaviourKey)
                 End If
                 LastBehaviourKey = BehaviourKey
 
                 For Each P In PL
-                    P.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviours.ToArray)
+                    P.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviour)
                 Next
 
                 For Each P In PL
