@@ -12,7 +12,10 @@ You can also place a number of random anchors using the
 Holding [Ctrl] will also pause the animation and show all anchors and a
 number of how much there are.
 
+The Terminal is also worth some time.
+
 More controls are:
 [Ctrl]+[F11] toggle fullscreen
-[Esc] toggle info
-[R] start/stop frame recording
+[Esc] show/hide info
+[R] start/stop frame recording (one frame = one image in selected directory! No Video!)
+[^] open/close terminal

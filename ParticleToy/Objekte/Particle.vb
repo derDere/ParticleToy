@@ -24,15 +24,15 @@
     Const ASIDE_RADIUS As Double = 20
     Const GROUP_SIZE As Integer = 100
 
-    Private MyIndex As Integer
-    Private Parent As Game
-    Private Ancs As Anchors
-    Private CurrentPosition As Point = Nothing
-    Private LastPosition As Point = Nothing
-    Private CurrentAngel As Double = 0
-    Private CurrentSpeed As Double = MIN_SPEED
-    Private CurrentColor As Pen
-    Private CurrentColorBru As SolidBrush
+    Friend MyIndex As Integer
+    Friend Parent As Game
+    Friend Ancs As Anchors
+    Friend CurrentPosition As Point = Nothing
+    Friend LastPosition As Point = Nothing
+    Friend CurrentAngel As Double = 0
+    Friend CurrentSpeed As Double = MIN_SPEED
+    Friend CurrentColor As Pen
+    Friend CurrentColorBru As SolidBrush
 
     Public Color As Pen = Pens.White
     Public TargetAngel As Double = 0
@@ -41,7 +41,7 @@
     Public Glowing As Boolean = False
     'Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
 
-    Private GolPos As Point
+    Friend GolPos As Point
     Public Shared ReadOnly GolQuader As Integer = Math.Sqrt(Game.PARTICLE_NUMBER)
     Public GOL_MARGIN As Integer = 5
     Public Shared Gol_Matrix(GolQuader, GolQuader) As Particle
@@ -75,16 +75,16 @@
     Public Shared AnchorCenter As Point? = Nothing
     Public Shared SortedAnchors As New List(Of Point)
     Public WillGlow As Boolean = False
-    Private AnchorIndex As Integer = -1
-    Private AnchorStep As Integer = 0
-    Private SpeedIsSet As Boolean = False
-    Private IsElectric As Boolean = False
-    Private IsAStar As Boolean = False
-    Private Partner As Particle = Nothing
-    Private MirrorPoint As Point? = Nothing
-    Private HideNoMovement As Boolean = True
-    Private GolStatusSet As Boolean = False
-    Private GolPositionFound As Boolean = False
+    Friend AnchorIndex As Integer = -1
+    Friend AnchorStep As Integer = 0
+    Friend SpeedIsSet As Boolean = False
+    Friend IsElectric As Boolean = False
+    Friend IsAStar As Boolean = False
+    Friend Partner As Particle = Nothing
+    Friend MirrorPoint As Point? = Nothing
+    Friend HideNoMovement As Boolean = True
+    Friend GolStatusSet As Boolean = False
+    Friend GolPositionFound As Boolean = False
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
         'Normalisierung
@@ -166,7 +166,12 @@
             If AnchorCenter Is Nothing Then
                 AnchorCenter = CenterOfPoints(Ancs.Anchors.ToArray)
             End If
-            Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+            Dim MouseDelta As Double
+            If MouseInfo.Position IsNot Nothing Then
+                MouseDelta = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+            Else
+                MouseDelta = 10000
+            End If
             If MouseDelta < ASIDE_RADIUS Then
                 TargetAngel = RndDirectedAngel(XYToDegrees(CurrentPosition, MouseInfo.Position), 30)
             Else
@@ -229,7 +234,9 @@
                 IsElectric = True
                 TargetSpeed = RndSpeed()
             End If
-            Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+            'If MouseInfo.Position IsNot Nothing Then
+            'Dim MouseDelta As Double = DeltaBetweed(CurrentPosition, MouseInfo.Position)
+            'End If
             TargetAngel = ElectricAngles(RND.Next(1000) Mod ElectricAngles.Length)
             CurrentAngel = TargetAngel
             Dim G As Integer = ((((CurrentPosition.X + CurrentPosition.Y) / 2) + (2 * Tick)) Mod 256)
@@ -243,7 +250,8 @@
         ElseIf Ancs.Anchors.Count = SYNCED Then 'Syncron 7 =============================================
             TargetSpeed = MAX_SPEED
             Dim Rocks As New List(Of Point)
-            Rocks.Add(MouseInfo.Position)
+            If MouseInfo.Position IsNot Nothing Then _
+                Rocks.Add(MouseInfo.Position)
             Rocks.AddRange(Ancs.Anchors)
             Dim IsNear As Point? = Nothing
             For Each Rock As Point In Rocks
@@ -501,7 +509,7 @@
         'GlowingPen = New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255))
     End Sub
 
-    Private Shared LightningPen As New Pen(Drawing.Color.FromArgb(64, 255, 255, 255), 1)
+    Friend Shared LightningPen As New Pen(Drawing.Color.FromArgb(64, 255, 255, 255), 1)
     Public Sub Draw(G As Graphics)
         If Lightnight IsNot Nothing Then
             G.DrawLine(LightningPen, CurrentPosition, Lightnight.Value)
@@ -540,7 +548,7 @@
     End Sub
 
     <DebuggerHidden>
-    Private Shared Function GolMN(X As Integer, Y As Integer) As Particle
+    Friend Shared Function GolMN(X As Integer, Y As Integer) As Particle
         If X < 0 Then X += GolQuader
         If Y < 0 Then Y += GolQuader
         If X >= GolQuader Then X = X Mod GolQuader

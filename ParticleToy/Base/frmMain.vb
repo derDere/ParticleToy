@@ -12,6 +12,8 @@
     Private MouseW As Integer = 0
     Private PressedKeys As New List(Of Keys)
 
+    Private ConsoleState As GameBase.ConsoleState = GameBase.ConsoleState.Closed
+
     Private Recording As Boolean = False
     Private RecordingFrame As Integer = 0
     Private RecordingDir As IO.DirectoryInfo = Nothing
@@ -148,6 +150,10 @@
     End Sub
 
     Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.Oem5 Then
+            SetConsoleState(Not ConsoleState)
+        End If
+        If ConsoleState = GameBase.ConsoleState.Open Then Exit Sub
         If Not PressedKeys.Contains(e.KeyCode) Then _
             PressedKeys.Add(e.KeyCode)
         If e.KeyCode = Keys.F11 AndAlso e.Modifiers = Keys.Control Then
@@ -219,5 +225,45 @@
             End If
         End Set
     End Property
+
+    Private Sub SetConsoleState(State As GameBase.ConsoleState)
+        ScreenImgBox.Select()
+        ConsoleState = State
+        Game.ConsoleToggle(State)
+        CommandTxb.Visible = State
+        'CommandTxb.Enabled = State
+        If CommandTxb.Enabled Then
+            CommandTxb.Text = ""
+            CommandTxb.Select()
+        End If
+    End Sub
+
+    Private Sub CommandTxb_KeyUp(sender As Object, e As KeyEventArgs) Handles CommandTxb.KeyUp
+        Dim selStart As Integer = CommandTxb.SelectionStart
+        Dim selLength As Integer = CommandTxb.SelectionLength
+        If CommandTxb.Text.StartsWith("^") Then
+            CommandTxb.Text = CommandTxb.Text.Substring(1)
+            If selStart = 0 Then
+                CommandTxb.Select(selStart, selLength - 1)
+            Else
+                CommandTxb.Select(selStart - 1, selLength)
+            End If
+        End If
+    End Sub
+
+    Private Sub CommandTxb_KeyDown(sender As Object, e As KeyEventArgs) Handles CommandTxb.KeyDown
+        If e.KeyCode = Keys.Oem5 Then
+            CommandTxb.Text = ""
+            SetConsoleState(Not ConsoleState)
+        End If
+        If Not ConsoleState Then
+            CommandTxb.Text = ""
+            Exit Sub
+        End If
+        If e.KeyCode = Keys.Enter Then
+            Game.ExecuteCommand(CommandTxb.Text.ToLower)
+            CommandTxb.Text = ""
+        End If
+    End Sub
 
 End Class

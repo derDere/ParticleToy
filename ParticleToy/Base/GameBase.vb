@@ -16,4 +16,13 @@
 
     Public MustOverride Sub Draw(G As Graphics)
 
+    Public MustOverride Sub ConsoleToggle(State As ConsoleState)
+
+    Public MustOverride Sub ExecuteCommand(Command As String)
+
+    Public Enum ConsoleState
+        Closed = False
+        Open = True
+    End Enum
+
 End Class

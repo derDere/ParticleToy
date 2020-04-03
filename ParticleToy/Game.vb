@@ -1,4 +1,6 @@
-﻿Public Class Game
+﻿Imports ParticleToy
+
+Public Class Game
     Inherits GameBase
 
     Public ClearColor1 As Color = Color.FromArgb(44, 9, 32, 0)
@@ -26,6 +28,7 @@
 
     Private MousePos As Point? = Nothing
     Private MouseDown As Boolean = False
+    Private DrawHint As Boolean = True
 
     Public Ancs As New Anchors
     Public FixedAncors As New Anchors
@@ -33,10 +36,12 @@
 
     Public PL As New List(Of Particle)
     Public Menu As New Menu(Me)
+    Public Console As New GameConsole(Me)
 
     Public Const OPT_SIZE_W As Integer = 800
     Public Const OPT_SIZE_H As Integer = 600
     Public Const PARTICLE_NUMBER As Integer = 10000
+    Public Const HINT_TICK_LENGTH As Integer = 50
 
     Public Overrides Sub Init()
         MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
@@ -46,6 +51,10 @@
     End Sub
 
     Public Overrides Sub Update(Tick As Integer, MouseInfo As MouseInfo, Keyboard As KeyBoardInfo)
+        If Tick > HINT_TICK_LENGTH Then
+            DrawHint = False
+        End If
+        If Console.State = ConsoleState.Open Then Exit Sub
         If Menu.UpdateAndIsOpen(Tick, MouseInfo, Keyboard) Then
         Else
             DrawInfo = Keyboard.CtrlKeyDown
@@ -122,8 +131,24 @@
             G.DrawString(Ancs.Anchors.Count, Font, Brushes.LightBlue, 10, 10)
         End If
 
+        If DrawHint Then
+            G.DrawString("Press ESC for some infos", Font, Brushes.White, 100, 100)
+        End If
+
         'Draw Menu
         Menu.Draw(G)
+
+        'Draw Console
+        Console.Draw(G)
+    End Sub
+
+    Public Overrides Sub ConsoleToggle(State As ConsoleState)
+        Console.State = State
+    End Sub
+
+    Public Overrides Sub ExecuteCommand(Command As String)
+        If String.IsNullOrEmpty(Command) Or String.IsNullOrWhiteSpace(Command) Then Exit Sub
+        Console.AddLine(Brushes.Yellow, ": " & Command)
     End Sub
 
 End Class

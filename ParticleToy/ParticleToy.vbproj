@@ -120,6 +120,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Objekte\Anchors.vb" />
+    <Compile Include="Objekte\GameConsole.vb" />
+    <Compile Include="Base\IBehaviour.vb" />
     <Compile Include="Objekte\Menu.vb" />
     <Compile Include="Objekte\Particle.vb" />
   </ItemGroup>
@@ -164,6 +166,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\b1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Objekte\Behaviours\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
