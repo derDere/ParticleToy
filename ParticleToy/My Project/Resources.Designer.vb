@@ -71,6 +71,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property fs() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("fs", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die .-~= Info =~-.
         '''The particles react to anchor points on the screen. They change behavior
         '''depending on the number of anchors.
