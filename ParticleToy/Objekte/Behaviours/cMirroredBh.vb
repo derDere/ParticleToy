@@ -44,7 +44,7 @@ Public Class cMirroredBh
                 End If
                 .CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, 0, G))
             Else
-                Dim Partner As Particle = .Parent.PL(.MyIndex - 1)
+                Dim Partner As Particle = .Parent.ParticleL(.MyIndex - 1)
                 .LastPosition = New Point(Game.ScreenSize.Width - Partner.LastPosition.X, Partner.LastPosition.Y)
                 .CurrentPosition = New Point(Game.ScreenSize.Width - Partner.CurrentPosition.X, Partner.CurrentPosition.Y)
                 .CurrentColor = Partner.CurrentColor

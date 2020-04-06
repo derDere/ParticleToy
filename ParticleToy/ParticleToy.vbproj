@@ -72,6 +72,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -120,12 +121,17 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Objekte\Anchors.vb" />
+    <Compile Include="Objekte\Behaviours\cAntsBh.vb" />
+    <Compile Include="Objekte\Behaviours\cCicadaBh.vb" />
     <Compile Include="Objekte\Behaviours\cCollectingBh.vb" />
     <Compile Include="Objekte\Behaviours\cCyclingBh.vb" />
     <Compile Include="Objekte\Behaviours\cElectricBh.vb" />
     <Compile Include="Objekte\Behaviours\cFlowingBh.vb" />
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
+    <Compile Include="Objekte\Behaviours\cVideoBh.vb" />
+    <Compile Include="Objekte\Behaviours\cImageBh.vb" />
+    <Compile Include="Objekte\Behaviours\cMatrixBh.vb" />
     <Compile Include="Objekte\Behaviours\cMirroredBh.vb" />
     <Compile Include="Objekte\Behaviours\cNoneBh.vb" />
     <Compile Include="Objekte\Behaviours\cRoamingBh.vb" />
@@ -134,10 +140,12 @@
     <Compile Include="Objekte\Behaviours\cSyncedBh.vb" />
     <Compile Include="Objekte\Behaviours\cTeleportBh.vb" />
     <Compile Include="Objekte\Behaviours\cTeslaBh.vb" />
+    <Compile Include="Objekte\Blink.vb" />
     <Compile Include="Objekte\GameConsole.vb" />
     <Compile Include="Base\IBehaviour.vb" />
     <Compile Include="Objekte\Menu.vb" />
     <Compile Include="Objekte\Particle.vb" />
+    <Compile Include="Objekte\ZipSystemManager.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Base\frmMain.resx">
@@ -162,6 +170,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="Resources\Clownfishes_in_Anemone_800x600_muted_frames_jpg.zip" />
     <None Include="Resources\fs.zip" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +190,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\b2.png" />
     <None Include="Resources\b1.png" />
   </ItemGroup>
   <ItemGroup />

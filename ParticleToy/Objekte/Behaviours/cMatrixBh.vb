@@ -2,39 +2,41 @@
 Imports ParticleToy
 Imports ParticleToy.Behaviour
 
-Public Class cNoneBh
+Public Class cMatrixBh
     Implements IBehaviour
 
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
-            Return "-1"
+            Return "matrix"
         End Get
     End Property
 
     Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.CurrentColor = Particle.Color
+        Particle.SpeedIsSet = False
     End Sub
 
     Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
-        Particle.FontColor = New SolidBrush(Particle.CurrentColor.Color)
     End Sub
 
     Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
-        With Particle
-            If .TargetAngel = 0 Then .TargetAngel = RndDegrees()
-            .TargetSpeed = MIN_SPEED
-            .CurrentColor = RandomColor()
-            If TypeOf Game Is Game Then
-                Dim Game1 As Game = Game
-                If (RND.Next(1000000, 9000000) Mod 50000) = 0 Then
-                    Game1.BlinkL.Add(New Blink(Particle.CurrentPosition, Game, .CurrentColor.Color))
-                End If
-            End If
-            If (RND.Next(1000000, 9000000) Mod 5000) = 0 Then
-                Particle.BlinkCharTimer = 10
+
+        If Not Particle.SpeedIsSet Then
+            Particle.SpeedIsSet = True
+            Particle.TargetSpeed = RndSpeed()
+            Dim m As Double = (Particle.TargetSpeed) / (MAX_SPEED)
+            Particle.CurrentColor = New Pen(Color.FromArgb(255, 0, Math.Round(255 * m), 0))
+        End If
+        Particle.TargetAngel = 270
+
+        If (Particle.MyIndex Mod 25) = 0 Then
+            If (Particle.CurrentPosition.Y Mod 10) = 0 Then
+                Particle.BlinkCharTimer = 5
+                Particle.FontColor = Brushes.White
                 Particle.BlinkChar = RndChar()
             End If
-        End With
+        End If
+
         Return True
     End Function
 

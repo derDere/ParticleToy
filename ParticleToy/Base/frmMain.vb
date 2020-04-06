@@ -12,6 +12,8 @@
     Private MouseW As Integer = 0
     Private PressedKeys As New List(Of Keys)
 
+    Private Const CONSOLE_KEY As Keys = Keys.Enter ' Keys.Oem5 ' = ^
+
     Private ConsoleState As GameBase.ConsoleState = GameBase.ConsoleState.Closed
 
     Private Recording As Boolean = False
@@ -150,7 +152,8 @@
     End Sub
 
     Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-        If e.KeyCode = Keys.Oem5 Then
+        If e.KeyCode = CONSOLE_KEY Then
+            e.SuppressKeyPress = False
             SetConsoleState(Not ConsoleState)
         End If
         If ConsoleState = GameBase.ConsoleState.Open Then Exit Sub
@@ -249,21 +252,35 @@
                 CommandTxb.Select(selStart - 1, selLength)
             End If
         End If
+        If e.KeyCode = CONSOLE_KEY Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
     End Sub
 
     Private Sub CommandTxb_KeyDown(sender As Object, e As KeyEventArgs) Handles CommandTxb.KeyDown
-        If e.KeyCode = Keys.Oem5 Then
-            CommandTxb.Text = ""
-            SetConsoleState(Not ConsoleState)
-        End If
-        If Not ConsoleState Then
-            CommandTxb.Text = ""
-            Exit Sub
-        End If
         If e.KeyCode = Keys.Enter Then
             Game.ExecuteCommand(CommandTxb.Text.ToLower)
             CommandTxb.Text = ""
+            e.Handled = True
+            e.SuppressKeyPress = False
         End If
+        If e.KeyCode = CONSOLE_KEY Then
+            CommandTxb.Text = ""
+            SetConsoleState(Not ConsoleState)
+            e.Handled = True
+            e.SuppressKeyPress = False
+        End If
+        If Not ConsoleState Then
+            e.Handled = True
+            e.SuppressKeyPress = False
+            CommandTxb.Text = ""
+        End If
+    End Sub
+
+    Private Sub CommandTxb_TextChanged(sender As Object, e As EventArgs) Handles CommandTxb.TextChanged
+        Dim selStart As Integer = CommandTxb.SelectionStart
+        Dim selLength As Integer = CommandTxb.SelectionLength
     End Sub
 
 End Class

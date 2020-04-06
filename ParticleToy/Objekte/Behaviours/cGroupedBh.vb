@@ -22,15 +22,17 @@ Public Class cGroupedBh
 
     Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
+
             If .Partner Is Nothing OrElse .Partner Is Me Then
                 If (.MyIndex Mod GROUP_SIZE) = 0 Then
-                    .Partner = .Parent.PL((.MyIndex + 1) Mod .Parent.PL.Count)
+                    .Partner = .Parent.ParticleL((.MyIndex + 1) Mod .Parent.ParticleL.Count)
                 Else
-                    .Partner = .Parent.PL(.MyIndex - (.MyIndex Mod GROUP_SIZE))
+                    .Partner = .Parent.ParticleL(.MyIndex - (.MyIndex Mod GROUP_SIZE))
                 End If
                 .CurrentColor = RandomColor()
             Else
                 If (.MyIndex Mod GROUP_SIZE) = 0 Then
+                    .TargetSpeed = MIN_SPEED * 2
                     .TargetAngel = RndDegrees()
                     If (RND.Next(1000) Mod 100) = 0 Then
                         .CurrentColor = RandomColor()

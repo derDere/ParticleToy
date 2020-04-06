@@ -2,12 +2,14 @@
 Imports ParticleToy
 Imports ParticleToy.Behaviour
 
-Public Class cNoneBh
+Public Class cImageBh
     Implements IBehaviour
+
+    Friend Image As Bitmap = My.Resources.b2
 
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
-            Return "-1"
+            Return "img"
         End Get
     End Property
 
@@ -16,23 +18,16 @@ Public Class cNoneBh
     End Sub
 
     Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
-        Particle.FontColor = New SolidBrush(Particle.CurrentColor.Color)
     End Sub
 
     Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            If .TargetAngel = 0 Then .TargetAngel = RndDegrees()
+            .CurrentColor = New Pen(Image.GetPixel(.CurrentPosition.X, .CurrentPosition.Y).Randomize(50))
             .TargetSpeed = MIN_SPEED
-            .CurrentColor = RandomColor()
-            If TypeOf Game Is Game Then
-                Dim Game1 As Game = Game
-                If (RND.Next(1000000, 9000000) Mod 50000) = 0 Then
-                    Game1.BlinkL.Add(New Blink(Particle.CurrentPosition, Game, .CurrentColor.Color))
-                End If
-            End If
-            If (RND.Next(1000000, 9000000) Mod 5000) = 0 Then
-                Particle.BlinkCharTimer = 10
-                Particle.BlinkChar = RndChar()
+            If MouseInfo.Position IsNot Nothing AndAlso DeltaBetweed(.CurrentPosition, MouseInfo.Position) < ASIDE_RADIUS Then
+                .TargetAngel = XYToDegrees(.CurrentPosition, MouseInfo.Position)
+            Else
+                .TargetAngel = RndDegrees()
             End If
         End With
         Return True

@@ -4,20 +4,6 @@ Public Class Particle
 
     Public Shared ReadOnly ElectricAngles As Double() = {0, 45, 90, 135, 180, 225, 270, 315}
 
-    'Const ROAMING As Integer = 0
-    'Const TESLA As Integer = 1
-    'Const TELEPORT As Integer = 2
-    'Const COLLECTING As Integer = 3
-    'Const CYCLING As Integer = 4
-    'Const FLOWING As Integer = 5
-    'Const ELECTRIC As Integer = 6
-    'Const SYNCED As Integer = 7
-    'Const STADDY As Integer = 8
-    'Const MIRRORED As Integer = 9
-    'Const STARS As Integer = 10
-    'Const GROUPED As Integer = 11
-    'Const GAME_OF_LIFE As Integer = 12
-
     Friend MyIndex As Integer
     Friend Parent As Game
     Friend Ancs As Anchors
@@ -27,6 +13,10 @@ Public Class Particle
     Friend CurrentSpeed As Double = MIN_SPEED
     Friend CurrentColor As Pen
     Friend CurrentColorBru As SolidBrush
+    Friend FontColor As Brush = Brushes.White
+    Friend BlinkChar As Char = " "c
+    Friend BlinkCharTimer As Integer = 0
+    Public Shared Property Font As New Font("Courier New", 8)
 
     Public Color As Pen = Pens.White
     Public TargetAngel As Double = 0
@@ -61,8 +51,6 @@ Public Class Particle
         GolMP = New Point(X, Y)
         If Gol_Matrix(X, Y) Is Nothing Then
             Gol_Matrix(X, Y) = Me
-        Else
-            Stop
         End If
     End Sub
 
@@ -79,11 +67,17 @@ Public Class Particle
     Friend HideNoMovement As Boolean = True
     Friend GolStatusSet As Boolean = False
     Friend GolPositionFound As Boolean = False
+    Friend FoundAnt As Boolean = False
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard, Behaviour As IBehaviour, NotBehaviour As IBehaviour)
         'Normalisierung
         '#######################################################################################
         Lightnight = Nothing
+
+        BlinkCharTimer -= 1
+        If BlinkCharTimer < 0 Then
+            BlinkChar = " "c
+        End If
 
         If NotBehaviour IsNot Nothing Then
             NotBehaviour.NormalizeNot(Me, Game, Tick, MouseInfo, Keyboard)
@@ -150,7 +144,9 @@ Public Class Particle
         End If
         If Glowing Then
             G.DrawRectangle(Pens.White, CurrentPosition.X - 1, CurrentPosition.Y - 1, 2, 2)
-            'G.FillRectangle(Brushes.White, CurrentPosition.X, CurrentPosition.Y, 1, 1)
+        End If
+        If BlinkChar <> " "c Then
+            G.DrawString(BlinkChar, Font, FontColor, Me.CurrentPosition.X, Me.CurrentPosition.Y)
         End If
     End Sub
 

@@ -55,6 +55,8 @@ Partial Class frmMain
         '
         'CommandTxb
         '
+        Me.CommandTxb.AcceptsReturn = True
+        Me.CommandTxb.AcceptsTab = True
         Me.CommandTxb.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CommandTxb.BackColor = System.Drawing.Color.Black
@@ -63,6 +65,7 @@ Partial Class frmMain
         Me.CommandTxb.ForeColor = System.Drawing.Color.Yellow
         Me.CommandTxb.HideSelection = False
         Me.CommandTxb.Location = New System.Drawing.Point(0, 580)
+        Me.CommandTxb.Multiline = True
         Me.CommandTxb.Name = "CommandTxb"
         Me.CommandTxb.Size = New System.Drawing.Size(800, 20)
         Me.CommandTxb.TabIndex = 1

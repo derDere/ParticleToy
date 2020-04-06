@@ -38,6 +38,12 @@
         End While
     End Sub
 
+    Public Sub AddLine(ParamArray LineArr As ConsoleLine())
+        For Each CL As ConsoleLine In LineArr
+            AddLine(CL.Color, CL.Line)
+        Next
+    End Sub
+
     Public Sub Draw(G As Graphics)
         If State = GameBase.ConsoleState.Open Then
             Dim LineSize As SizeF = G.MeasureString("W", Font)
@@ -52,7 +58,7 @@
         End If
     End Sub
 
-    Private Structure ConsoleLine
+    Public Structure ConsoleLine
         Public Line As String
         Public Color As Brush
     End Structure

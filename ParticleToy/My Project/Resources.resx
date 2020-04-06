@@ -127,4 +127,10 @@
   <data name="fs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\fs.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="b2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\b2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Clownfishes_in_Anemone_800x600_muted_frames_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Clownfishes_in_Anemone_800x600_muted_frames_jpg.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

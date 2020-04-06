@@ -34,9 +34,11 @@ Public Class Game
     Public FixedAncors As New Anchors
     Public DrawInfo As Boolean = False
 
-    Public PL As New List(Of Particle)
+    Public ParticleL As New List(Of Particle)
+    Public BlinkL As New List(Of Blink)
     Public Menu As New Menu(Me)
     Public Console As New GameConsole(Me)
+    Public ZipSysMan As New ZipSystemManager
 
     Public Const OPT_SIZE_W As Integer = 800
     Public Const OPT_SIZE_H As Integer = 600
@@ -50,7 +52,7 @@ Public Class Game
     Public Overrides Sub Init()
         MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
         For index = 1 To PARTICLE_NUMBER
-            PL.Add(New Particle(Ancs, RndPoint(ScreenSize), index - 1, Me))
+            ParticleL.Add(New Particle(Ancs, RndPoint(ScreenSize), index - 1, Me))
         Next
         For Each ItmType As Type In Reflection.Assembly.GetExecutingAssembly.GetTypes
             If ItmType.GetInterfaces.Any(Function(I) I.Name = "IBehaviour") Then
@@ -72,6 +74,7 @@ Public Class Game
             MouseDown = MouseInfo.LeftIsPressed
             Ancs.Anchors.Clear()
             If MouseInfo.LeftIsPressed Then
+                Console.EnteredMode = ""
                 If Keyboard.CtrlKeyDown And MouseInfo.PressedLeftIsPressed Then
                     FixedAncors.Anchors.Add(MouseInfo.Position)
                     Debug.WriteLine("Fixed")
@@ -95,6 +98,7 @@ Public Class Game
             If Keyboard.Pressed(Keys.F11) Then FunctionKeySetAncorCount = 11
             If Keyboard.Pressed(Keys.F12) Then FunctionKeySetAncorCount = 12
             If FunctionKeySetAncorCount <> 0 Then
+                Console.EnteredMode = ""
                 FixedAncors.Anchors.Clear()
                 For n = 1 To FunctionKeySetAncorCount
                     FixedAncors.Anchors.Add(RndPoint(ScreenSize))
@@ -113,21 +117,32 @@ Public Class Game
                 End If
                 Dim CurrentBehaviour As IBehaviour = Behaviours(BehaviourKey)
 
-                Dim NotBehaviour As IBehaviour
+                Dim NotBehaviour As IBehaviour = Nothing
                 If LastBehaviourKey <> BehaviourKey Then
                     NotBehaviour = Behaviours(LastBehaviourKey)
                 End If
                 LastBehaviourKey = BehaviourKey
 
-                For Each P In PL
-                    P.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviour)
+                For Each ParticleItm In ParticleL
+                    ParticleItm.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviour)
                 Next
 
-                For Each P In PL
-                    If P.WillGlow Then
-                        P.Glowing = True
+                For Each ParticleItm In ParticleL
+                    If ParticleItm.WillGlow Then
+                        ParticleItm.Glowing = True
                     Else
-                        P.Glowing = 0
+                        ParticleItm.Glowing = 0
+                    End If
+                Next
+
+                Dim KillList As New List(Of Blink)
+                For Each BlinkItm As Blink In BlinkL
+                    BlinkItm.Update(Me, Tick, MouseInfo, Keyboard)
+                    If BlinkItm.KillMe Then KillList.Add(BlinkItm)
+                Next
+                For Each BlinkItm As Blink In KillList
+                    If BlinkL.Contains(BlinkItm) Then
+                        BlinkL.Remove(BlinkItm)
                     End If
                 Next
             End If
@@ -142,8 +157,13 @@ Public Class Game
         'G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         'Draw Particles
-        For Each P In PL
-            P.Draw(G)
+        For Each ParticleItm In ParticleL
+            ParticleItm.Draw(G)
+        Next
+
+        'Draw Blinks
+        For Each BlinkItm As Blink In BlinkL
+            BlinkItm.Draw(G)
         Next
 
         If DrawInfo Then
@@ -175,8 +195,7 @@ Public Class Game
     End Sub
 
     Public Overrides Sub ExecuteCommand(Command As String)
-        If String.IsNullOrEmpty(Command) Or String.IsNullOrWhiteSpace(Command) Then Exit Sub
-        Console.AddLine(Brushes.Yellow, ": " & Command)
+        ZipSysMan.ExecuteCommand(Console, Command)
     End Sub
 
 End Class

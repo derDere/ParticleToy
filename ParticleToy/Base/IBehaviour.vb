@@ -1,4 +1,6 @@
-﻿Public Interface IBehaviour
+﻿Imports System.Runtime.CompilerServices
+
+Public Interface IBehaviour
 
     ReadOnly Property Key As String
 
@@ -20,15 +22,35 @@ Namespace Behaviour
         Public Const BOUNCE_RADIUS As Double = 50
         Public Const ASIDE_RADIUS As Double = 20
         Public Const GROUP_SIZE As Integer = 100
+        Public Const ANTS_SPEED As Integer = 2
 
         <DebuggerHidden>
         Public Function RndSpeed() As Double
             Return (RND.Next(1000) Mod ((MAX_SPEED - MIN_SPEED) * 0.75)) + MIN_SPEED
         End Function
 
-        Public Class ExitSub
-            Inherits Exception
-        End Class
+        <DebuggerHidden>
+        Public Function RndChar() As Char
+            Const AllChars As String = "#+*-:;?=)(/&%$§abcdefghijklmnopqrstuvwxyzАБбВГДЖИЛПФЦЧШЩЪЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789αβϐΓγΔδεϵζηθϑικϰΛλμνΞξοΠπϖπρϱΣστυϒεουΦφϕχΨΩω"
+            Return AllChars(RND.Next(10000, 99999) Mod AllChars.Length)
+        End Function
 
+        <DebuggerHidden>
+        <Extension>
+        Public Function Randomize(Color As Color, Amount As Integer) As Color
+            Dim R As Integer = Color.R + ((RND.Next(1000, 9999) Mod Amount) - Math.Round(Amount / 2))
+            Dim G As Integer = Color.G + ((RND.Next(1000, 9999) Mod Amount) - Math.Round(Amount / 2))
+            Dim B As Integer = Color.B + ((RND.Next(1000, 9999) Mod Amount) - Math.Round(Amount / 2))
+
+            If R < 0 Then R = 0
+            If G < 0 Then G = 0
+            If B < 0 Then B = 0
+
+            If R > 255 Then R = 255
+            If G > 255 Then G = 255
+            If B > 255 Then B = 255
+
+            Return Color.FromArgb(Color.A, R, G, B)
+        End Function
     End Module
 End Namespace
