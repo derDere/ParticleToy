@@ -1,5 +1,5 @@
 ﻿Public Class Anchors
 
-    Public Anchors As New List(Of Point)
+    Public Anchors As New List(Of PointF)
 
 End Class

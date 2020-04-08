@@ -68,6 +68,9 @@
     <ApplicationIcon>ParticleToy.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SimplexNoise, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimplexNoise.2.0.0\lib\net45\SimplexNoise.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -127,8 +130,10 @@
     <Compile Include="Objekte\Behaviours\cCyclingBh.vb" />
     <Compile Include="Objekte\Behaviours\cElectricBh.vb" />
     <Compile Include="Objekte\Behaviours\cFlowingBh.vb" />
+    <Compile Include="Objekte\Behaviours\cFlowMapBh.vb" />
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
+    <Compile Include="Objekte\Behaviours\cRainbowBh.vb" />
     <Compile Include="Objekte\Behaviours\cVideoBh.vb" />
     <Compile Include="Objekte\Behaviours\cImageBh.vb" />
     <Compile Include="Objekte\Behaviours\cMatrixBh.vb" />
@@ -150,6 +155,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Base\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -170,6 +176,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Resources\Clownfishes_in_Anemone_800x600_muted_frames_jpg.zip" />
     <None Include="Resources\fs.zip" />
   </ItemGroup>

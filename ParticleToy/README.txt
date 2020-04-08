@@ -18,4 +18,4 @@ More controls are:
 [Ctrl]+[F11] toggle fullscreen
 [Esc] show/hide info
 [R] start/stop frame recording (one frame = one image in selected directory! No Video!)
-[^] open/close terminal
+[ENTER] open/close terminal

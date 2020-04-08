@@ -11,16 +11,16 @@ Public Class cGroupedBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.IsElectric = False
         Particle.CurrentColor = Particle.Color
         Particle.Partner = Nothing
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
 
             If .Partner Is Nothing OrElse .Partner Is Me Then
@@ -53,7 +53,7 @@ Public Class cGroupedBh
                 If MouseInfo.Position IsNot Nothing AndAlso DeltaBetweed(.CurrentPosition, MouseInfo.Position) < ASIDE_RADIUS Then
                     .TargetAngel = XYToDegrees(.CurrentPosition, MouseInfo.Position)
                 End If
-                For Each Anc As Point In .Ancs.Anchors
+                For Each Anc As PointF In .Ancs.Anchors
                     If DeltaBetweed(.CurrentPosition, Anc) < BOUNCE_RADIUS Then
                         .TargetAngel = XYToDegrees(.CurrentPosition, Anc)
                     End If

@@ -26,16 +26,16 @@ Public Class cVideoBh
         Images = imgL.ToArray
     End Sub
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.CurrentColor = Particle.Color
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            .CurrentColor = New Pen(Images(Tick Mod Images.Length).GetPixel(.CurrentPosition.X, .CurrentPosition.Y).Randomize(50))
+            .CurrentColor = New Pen(Images(Tick Mod Images.Length).GetPixel(Math.Floor(.CurrentPosition.X), Math.Floor(.CurrentPosition.Y)).Randomize(50))
             .TargetSpeed = MIN_SPEED
             If MouseInfo.Position IsNot Nothing AndAlso DeltaBetweed(.CurrentPosition, MouseInfo.Position) < ASIDE_RADIUS Then
                 .TargetAngel = XYToDegrees(.CurrentPosition, MouseInfo.Position)

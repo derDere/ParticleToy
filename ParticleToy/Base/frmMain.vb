@@ -1,11 +1,13 @@
-﻿Public Class frmMain
+﻿Imports System.Runtime.InteropServices
+
+Public Class frmMain
 
     Const Title As String = "Particle Toy"
 
     Public Shared ReadOnly CursorDefault As Cursor
     Public Shared ReadOnly CursorRed As Cursor
 
-    Private RealMP As Point? = Nothing
+    Private RealMP As PointF? = Nothing
     Private MouseL As Boolean = False
     Private MouseR As Boolean = False
     Private MouseM As Boolean = False
@@ -40,7 +42,23 @@
         CursorRed = New Cursor(redCurB.GetHicon)
     End Sub
 
+    <FlagsAttribute>
+    Public Enum EXECUTION_STATE : uint
+        ES_SYSTEM_REQUIRED = &H1
+        ES_DISPLAY_REQUIRED = &H2
+        ' Legacy flag, should Not be used.
+        ' ES_USER_PRESENT   = &H00000004
+        ES_AWAYMODE_REQUIRED = &H40
+        ES_CONTINUOUS = &H80000000
+    End Enum
+
+    <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
+    Public Shared Function SetThreadExecutionState(esFlags As EXECUTION_STATE) As EXECUTION_STATE
+    End Function
+
     Public Sub New()
+        SetThreadExecutionState(EXECUTION_STATE.ES_DISPLAY_REQUIRED)
+
         ' Dieser Aufruf ist für den Designer erforderlich.
         InitializeComponent()
 
@@ -71,11 +89,11 @@
         If RealMP IsNot Nothing Then
             Dim pX As Double = RealMP.Value.X / (ScreenImgBox.Width + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
             If pX > My.Computer.Screen.WorkingArea.Width Then pX = My.Computer.Screen.WorkingArea.Width
-            Dim mouseX As Integer = Math.Round(pX * Game.ScreenSize.Width)
+            Dim mouseX As Double = (pX * Game.ScreenSize.Width)
             Dim pY As Double = RealMP.Value.Y / (ScreenImgBox.Height + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
             If pY > My.Computer.Screen.WorkingArea.Height Then pY = My.Computer.Screen.WorkingArea.Height
-            Dim mouseY As Integer = Math.Round(pY * Game.ScreenSize.Height)
-            mi = New MouseInfo(MouseL, MouseR, MouseM, New Point(mouseX, mouseY), MouseW, My.Computer.Mouse)
+            Dim mouseY As Double = (pY * Game.ScreenSize.Height)
+            mi = New MouseInfo(MouseL, MouseR, MouseM, New PointF(mouseX, mouseY), MouseW, My.Computer.Mouse)
         Else
             mi = New MouseInfo(MouseL, MouseR, MouseM, Nothing, MouseW, My.Computer.Mouse)
         End If
@@ -133,7 +151,7 @@
     End Sub
 
     Private Sub ScreenImgBox_MouseMove(sender As Object, e As MouseEventArgs) Handles ScreenImgBox.MouseMove
-        RealMP = New Point(e.X, e.Y)
+        RealMP = New PointF(e.X, e.Y)
     End Sub
 
     Private Sub ScreenImgBox_MouseUp(sender As Object, e As MouseEventArgs) Handles ScreenImgBox.MouseUp
@@ -276,11 +294,6 @@
             e.SuppressKeyPress = False
             CommandTxb.Text = ""
         End If
-    End Sub
-
-    Private Sub CommandTxb_TextChanged(sender As Object, e As EventArgs) Handles CommandTxb.TextChanged
-        Dim selStart As Integer = CommandTxb.SelectionStart
-        Dim selLength As Integer = CommandTxb.SelectionLength
     End Sub
 
 End Class

@@ -3,30 +3,32 @@
 Public Class Game
     Inherits GameBase
 
-    Public ClearColor1 As Color = Color.FromArgb(44, 9, 32, 0)
-    Public ClearColor2 As Color = Color.FromArgb(44, 0, 0, 0)
-    Public ClearColor3 As Color = Color.FromArgb(44, 36, 0, 61)
-    Public ClearBru As New Drawing2D.LinearGradientBrush(New Point(0, 0), New Point(OPT_SIZE_W, OPT_SIZE_H), ClearColor2, ClearColor2) With {
-        .InterpolationColors = New Drawing2D.ColorBlend() With {
-            .Colors = {
-                ClearColor1,
-                ClearColor2,
-                ClearColor3
-            },
-            .Positions = {
-                0,
-                0.5,
-                1
-            }
-        }
-    }
-    ' OLD: Public ClearBru As New SolidBrush(Color.FromArgb(44, 0, 0, 0))
+    Public Const DEFAULT_BG_ALPHA As Integer = 44
+    Public Property BG_Alpha As Integer = DEFAULT_BG_ALPHA
+    'Public ReadOnly ClearColor1 As Color = Color.FromArgb(DEFAULT_BG_ALPHA, 9, 32, 0)
+    'Public ReadOnly ClearColor2 As Color = Color.FromArgb(DEFAULT_BG_ALPHA, 0, 0, 0)
+    'Public ReadOnly ClearColor3 As Color = Color.FromArgb(DEFAULT_BG_ALPHA, 36, 0, 61)
+    'Public ReadOnly ClearBru As New Drawing2D.LinearGradientBrush(New Point(0, 0), New Point(OPT_SIZE_W, OPT_SIZE_H), ClearColor2, ClearColor2) With {
+    '    .InterpolationColors = New Drawing2D.ColorBlend() With {
+    '        .Colors = {
+    '            ClearColor1,
+    '            ClearColor2,
+    '            ClearColor3
+    '        },
+    '        .Positions = {
+    '            0,
+    '            0.5,
+    '            1
+    '        }
+    '    }
+    '}
+    Public ClearBru As New SolidBrush(Color.FromArgb(BG_Alpha, 0, 0, 0))
 
     Public InfoBgBru As New SolidBrush(Color.FromArgb(192, 0, 0, 0))
     Public InfoLinePen As New Pen(Brushes.White, 3)
     Public Font As New Font("Arial", 15)
 
-    Private MousePos As Point? = Nothing
+    Private MousePos As PointF? = Nothing
     Private MouseDown As Boolean = False
     Private DrawHint As Boolean = True
 
@@ -145,6 +147,8 @@ Public Class Game
                         BlinkL.Remove(BlinkItm)
                     End If
                 Next
+
+                ClearBru = New SolidBrush(Color.FromArgb(BG_Alpha, 0, 0, 0))
             End If
         End If
     End Sub
@@ -169,7 +173,7 @@ Public Class Game
         If DrawInfo Then
             Dim s As SizeF = G.MeasureString(Ancs.Anchors.Count, Font)
             G.FillRectangle(InfoBgBru, 8, 8, s.Width + 4, s.Height + 4)
-            For Each P As Point In Ancs.Anchors
+            For Each P As PointF In Ancs.Anchors
                 G.FillEllipse(InfoBgBru, P.X - 8, P.Y - 8, 16, 16)
                 G.DrawLine(InfoLinePen, Offset(P, -6, 0), Offset(P, 6, 0))
                 G.DrawLine(InfoLinePen, Offset(P, 0, -6), Offset(P, 0, 6))

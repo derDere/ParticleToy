@@ -6,9 +6,9 @@ Public Class cCicadaBh
     Implements IBehaviour
 
     Private CicadaImg As Bitmap = My.Resources.b1
-    Private P1 As New Point(150, 250)
-    Private P2 As New Point(400, 250)
-    Private P3 As New Point(650, 250)
+    Private P1 As New PointF(150, 250)
+    Private P2 As New PointF(400, 250)
+    Private P3 As New PointF(650, 250)
 
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
@@ -16,23 +16,23 @@ Public Class cCicadaBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.FoundAnt = False
         Particle.CurrentColor = Particle.Color
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If Not .FoundAnt Then
                 .CurrentColor = New Pen(Color.Silver.Randomize(100))
             End If
-            Dim targetPoint As Point = P1
+            Dim targetPoint As PointF = P1
             If (.MyIndex Mod 3) = 1 Then targetPoint = P2
             If (.MyIndex Mod 3) = 2 Then targetPoint = P3
-            If CicadaImg.GetPixel(.CurrentPosition.X, .CurrentPosition.Y).R < 128 Then
+            If CicadaImg.GetPixel(Math.Floor(.CurrentPosition.X), Math.Floor(.CurrentPosition.Y)).R < 128 Then
                 '.TargetAngel = RndDegrees()
                 .TargetAngel = RndDirectedAngel(XYToDegrees(.CurrentPosition, targetPoint), 220)
                 .FoundAnt = True

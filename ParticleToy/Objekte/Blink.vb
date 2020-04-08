@@ -1,15 +1,15 @@
 ﻿Public Class Blink
 
-    Public Property Position As Point
+    Public Property Position As PointF
     Public Property KillMe As Boolean = False
 
     Private Parent As Game
     Private Pen As Pen
-    Private MaxRadius As Integer
-    Private MinRadius As Integer
-    Private Radius As Integer
+    Private MaxRadius As Double
+    Private MinRadius As Double
+    Private Radius As Double
 
-    Public Sub New(Position As Point, Parent As Game, Color As Color, Optional MaxRadius As Integer = 10, Optional MinRadius As Integer = 0, Optional Width As Integer = 1)
+    Public Sub New(Position As PointF, Parent As Game, Color As Color, Optional MaxRadius As Double = 10, Optional MinRadius As Double = 0, Optional Width As Integer = 1)
         Me.Position = Position
         Me.Parent = Parent
         Me.Pen = New Pen(Color, Width)
@@ -27,7 +27,7 @@
 
     Public Sub Draw(G As Graphics)
         If Not KillMe Then
-            G.DrawEllipse(Me.Pen, Me.Position.X - Me.Radius, Me.Position.Y - Me.Radius, Me.Radius * 2 + 1, Me.Radius * 2 + 1)
+            G.DrawEllipse(Me.Pen, CInt(Math.Round(Me.Position.X - Me.Radius)), CInt(Math.Round(Me.Position.Y - Me.Radius)), CInt(Math.Round(Me.Radius * 2 + 1)), CInt(Math.Round(Me.Radius * 2 + 1)))
         End If
     End Sub
 

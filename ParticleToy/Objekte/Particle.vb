@@ -7,8 +7,8 @@ Public Class Particle
     Friend MyIndex As Integer
     Friend Parent As Game
     Friend Ancs As Anchors
-    Friend CurrentPosition As Point = Nothing
-    Friend LastPosition As Point = Nothing
+    Friend CurrentPosition As PointF = Nothing
+    Friend LastPosition As PointF = Nothing
     Friend CurrentAngel As Double = 0
     Friend CurrentSpeed As Double = MIN_SPEED
     Friend CurrentColor As Pen
@@ -21,7 +21,7 @@ Public Class Particle
     Public Color As Pen = Pens.White
     Public TargetAngel As Double = 0
     Public TargetSpeed As Double = MIN_SPEED
-    Public Lightnight As Point? = Nothing
+    Public Lightnight As PointF? = Nothing
     Public Glowing As Boolean = False
     'Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
 
@@ -31,7 +31,7 @@ Public Class Particle
     Public Shared Gol_Matrix(GolQuader, GolQuader) As Particle
     Public GolMP As Point
 
-    Public Sub New(Ancs As Anchors, Position As Point, Index As Integer, Parent As Game)
+    Public Sub New(Ancs As Anchors, Position As PointF, Index As Integer, Parent As Game)
         Me.Parent = Parent
         MyIndex = Index
         Dim G As Integer = 128
@@ -54,8 +54,8 @@ Public Class Particle
         End If
     End Sub
 
-    Public Shared AnchorCenter As Point? = Nothing
-    Public Shared SortedAnchors As New List(Of Point)
+    Public Shared AnchorCenter As PointF? = Nothing
+    Public Shared SortedAnchors As New List(Of PointF)
     Public WillGlow As Boolean = False
     Friend AnchorIndex As Integer = -1
     Friend AnchorStep As Integer = 0
@@ -63,7 +63,7 @@ Public Class Particle
     Friend IsElectric As Boolean = False
     Friend IsAStar As Boolean = False
     Friend Partner As Particle = Nothing
-    Friend MirrorPoint As Point? = Nothing
+    Friend MirrorPoint As PointF? = Nothing
     Friend HideNoMovement As Boolean = True
     Friend GolStatusSet As Boolean = False
     Friend GolPositionFound As Boolean = False
@@ -105,28 +105,30 @@ Public Class Particle
 
         'Bewegung
         '#######################################################################################
-        Dim NewPos As Point = DegreesToXY(CurrentAngel, CurrentSpeed, CurrentPosition)
-        MoveTo(NewPos)
+        If CurrentSpeed > 0 Then
+            Dim NewPos As PointF = DegreesToXY(CurrentAngel, CurrentSpeed, CurrentPosition)
+            MoveTo(NewPos)
+        End If
 
         'Positions Korrectur
         '#######################################################################################
         If CurrentPosition.X >= Game.ScreenSize.Width Then
-            CurrentPosition = New Point(0, CurrentPosition.Y)
+            CurrentPosition = New PointF(0, CurrentPosition.Y)
             LastPosition = CurrentPosition
             Lightnight = Nothing
         End If
         If CurrentPosition.X < 0 Then
-            CurrentPosition = New Point(Game.ScreenSize.Width - 1, CurrentPosition.Y)
+            CurrentPosition = New PointF(Game.ScreenSize.Width - 1, CurrentPosition.Y)
             LastPosition = CurrentPosition
             Lightnight = Nothing
         End If
         If CurrentPosition.Y >= Game.ScreenSize.Height Then
-            CurrentPosition = New Point(CurrentPosition.X, 0)
+            CurrentPosition = New PointF(CurrentPosition.X, 0)
             LastPosition = CurrentPosition
             Lightnight = Nothing
         End If
         If CurrentPosition.Y < 0 Then
-            CurrentPosition = New Point(CurrentPosition.X, Game.ScreenSize.Height - 1)
+            CurrentPosition = New PointF(CurrentPosition.X, Game.ScreenSize.Height - 1)
             LastPosition = CurrentPosition
             Lightnight = Nothing
         End If
@@ -150,14 +152,14 @@ Public Class Particle
         End If
     End Sub
 
-    Public Sub MoveTo(NewPosition As Point?)
+    Public Sub MoveTo(NewPosition As PointF?)
         LastPosition = CurrentPosition
         CurrentPosition = NewPosition
     End Sub
 
     Public Shared Sub SortAnchors(Anc As Anchors)
         SortedAnchors.AddRange(Anc.Anchors.ToArray)
-        Dim Center As Point = CenterOfPoints(Anc.Anchors.ToArray)
+        Dim Center As PointF = CenterOfPoints(Anc.Anchors.ToArray)
         SortedAnchors.Sort(Function(A, B)
                                Dim aD As Double = XYToDegrees(A, Center)
                                Dim bD As Double = XYToDegrees(B, Center)

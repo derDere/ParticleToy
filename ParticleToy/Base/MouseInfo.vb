@@ -11,11 +11,11 @@
     Public ReadOnly LeftIsPressed As Boolean
     Public ReadOnly RightIsPressed As Boolean
     Public ReadOnly MiddleIsPressed As Boolean
-    Public ReadOnly Position As Point?
+    Public ReadOnly Position As PointF?
     Public ReadOnly WeelDelta As Integer
     Public ReadOnly Device As Microsoft.VisualBasic.Devices.Mouse
 
-    Public Sub New(Lip As Boolean, Rip As Boolean, Mip As Boolean, Pos As Point?, WD As Integer, Div As Microsoft.VisualBasic.Devices.Mouse)
+    Public Sub New(Lip As Boolean, Rip As Boolean, Mip As Boolean, Pos As PointF?, WD As Integer, Div As Microsoft.VisualBasic.Devices.Mouse)
         Me.LeftIsPressed = Lip
         Me.RightIsPressed = Rip
         Me.MiddleIsPressed = Mip

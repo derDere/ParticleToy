@@ -11,24 +11,24 @@ Public Class cFlowingBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.SpeedIsSet = False
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If Not .SpeedIsSet Then
                 .SpeedIsSet = True
             End If
             .TargetSpeed = RndSpeed()
-            Dim Rocks As New List(Of Point)
+            Dim Rocks As New List(Of PointF)
             Rocks.Add(MouseInfo.Position)
             Rocks.AddRange(.Ancs.Anchors)
-            Dim IsNear As Point? = Nothing
-            For Each Rock As Point In Rocks
+            Dim IsNear As PointF? = Nothing
+            For Each Rock As PointF In Rocks
                 Dim delta As Double = DeltaBetweed(Rock, .CurrentPosition)
                 If delta < ASIDE_RADIUS Then
                     IsNear = Rock

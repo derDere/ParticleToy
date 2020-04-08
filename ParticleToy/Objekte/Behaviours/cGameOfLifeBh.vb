@@ -11,7 +11,7 @@ Public Class cGameOfLifeBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.GolStatusSet = False
         Particle.WillGlow = False
         Particle.Glowing = False
@@ -19,11 +19,11 @@ Public Class cGameOfLifeBh
         Particle.HideNoMovement = True
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
         Particle.HideNoMovement = False
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If Not .GolStatusSet Then
                 .WillGlow = (RND.Next(1000) Mod 5) = 0
@@ -57,7 +57,7 @@ Public Class cGameOfLifeBh
                 End If
             End If
             .TargetSpeed = MAX_SPEED
-            Dim delta As Integer = DeltaBetweed(.CurrentPosition, .GolPos)
+            Dim delta As Double = DeltaBetweed(.CurrentPosition, .GolPos)
             If delta < BOUNCE_RADIUS * 2 Then
                 .TargetSpeed = APROACH_SPEED
             End If
@@ -75,12 +75,12 @@ Public Class cGameOfLifeBh
             End If
             If .GolPositionFound Then
                 Dim AncDelta As Double = Double.MaxValue
-                For Each Anc As Point In .Ancs.Anchors
+                For Each Anc As PointF In .Ancs.Anchors
                     Dim d As Double = DeltaBetweed(.GolPos, Anc)
                     If d < AncDelta Then AncDelta = d
                 Next
                 Dim m As Double = Math.Cos((AncDelta) / 10 + (-Tick / 10))
-                .CurrentPosition = New Point(.GolPos.X, .GolPos.Y - (5 * m))
+                .CurrentPosition = New PointF(.GolPos.X, .GolPos.Y - (5 * m))
             End If
         End With
         Return True

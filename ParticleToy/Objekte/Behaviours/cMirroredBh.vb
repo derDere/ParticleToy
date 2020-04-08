@@ -11,16 +11,16 @@ Public Class cMirroredBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.IsElectric = False
         Particle.CurrentColor = Particle.Color
         Particle.MirrorPoint = Nothing
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If (.MyIndex Mod 2) = 0 Then
                 Dim p As Double = .CurrentPosition.Y / Game.ScreenSize.Height
@@ -45,8 +45,8 @@ Public Class cMirroredBh
                 .CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, 0, G))
             Else
                 Dim Partner As Particle = .Parent.ParticleL(.MyIndex - 1)
-                .LastPosition = New Point(Game.ScreenSize.Width - Partner.LastPosition.X, Partner.LastPosition.Y)
-                .CurrentPosition = New Point(Game.ScreenSize.Width - Partner.CurrentPosition.X, Partner.CurrentPosition.Y)
+                .LastPosition = New PointF(Game.ScreenSize.Width - Partner.LastPosition.X, Partner.LastPosition.Y)
+                .CurrentPosition = New PointF(Game.ScreenSize.Width - Partner.CurrentPosition.X, Partner.CurrentPosition.Y)
                 .CurrentColor = Partner.CurrentColor
                 Return False
             End If

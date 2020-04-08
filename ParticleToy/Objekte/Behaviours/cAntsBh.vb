@@ -11,46 +11,55 @@ Public Class cAntsBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
         Particle.Partner = Nothing
         Particle.FoundAnt = False
         Particle.SpeedIsSet = False
         Particle.CurrentColor = Particle.Color
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
         If Not Particle.SpeedIsSet Then
             Particle.SpeedIsSet = True
-            Particle.TargetSpeed = ANTS_SPEED
             Particle.CurrentColor = New Pen(Color.Chocolate.Randomize(100))
         End If
     End Sub
 
-    Public Function Behave(Particle As Particle, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
+    Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            If Particle.MyIndex = 0 Then
-                If MouseInfo.LeftIsPressed Then
-                    .TargetAngel = RndDirectedAngel(XYToDegrees(MouseInfo.Position, .CurrentPosition), 90)
-                Else
-                    If (RND.Next(1000, 9999) Mod 5) = 0 Then
-                        Dim m As Integer = 1
-                        If (RND.Next(1000, 9999) Mod 2) = 0 Then
-                            m = -1
-                        End If
-                        .TargetAngel += 10 * m
+            If .MyIndex = 0 Then
+                .TargetSpeed = 2
+                .CurrentColor = Pens.White
+                If (RND.Next(1000, 9999) Mod 5) = 0 Then
+                    Dim m As Integer = 1
+                    If (RND.Next(1000, 9999) Mod 2) = 0 Then
+                        m = -1
                     End If
+                    .TargetAngel += 10 * m
                 End If
             Else
                 .Partner = .Parent.ParticleL(.MyIndex - 1)
-                Dim delta As Integer = DeltaBetweed(.CurrentPosition, .Partner.CurrentPosition)
-                If delta < (.Parent.ScreenSize.Height - 50) Or (Not .FoundAnt) Then
-                    If delta > 5 Then
-                        .FoundAnt = True
-                        .TargetAngel = XYToDegrees(.Partner.CurrentPosition, .CurrentPosition)
+                Dim delta As Double = DeltaBetweedFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize.Width, Game.ScreenSize.Height)
+                If delta > 5 Then
+                    If delta > 300 Then
+                        .TargetSpeed = MAX_SPEED
+                    ElseIf delta > 100 Then
+                        .TargetSpeed = 7
                     Else
-                        .TargetAngel = RndDegrees()
+                        .TargetSpeed = 4
                     End If
+                    .FoundAnt = True
+                    .TargetAngel = RndDirectedAngel(XYToDegreesFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize.Width, Game.ScreenSize.Height), 45)
+                Else
+                    .TargetSpeed = 0
+                    .CurrentSpeed = 0
                 End If
+            End If
+            If (Tick Mod Game.ParticleL.Count) = .MyIndex Then
+                '.FontColor = Brushes.Lime
+                '.BlinkChar = "+"
+                '.BlinkCharTimer = 1
+                Game.BlinkL.Add(New Blink(.CurrentPosition, Game, Drawing.Color.Lime, 10, 0, 1))
             End If
         End With
         Return True
