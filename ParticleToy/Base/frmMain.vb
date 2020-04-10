@@ -296,4 +296,8 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub ActivityTicker_Tick(sender As Object, e As EventArgs) Handles ActivityTicker.Tick
+        SendKeys.Send("{NUMLOCK}{NUMLOCK}")
+    End Sub
+
 End Class

@@ -5,7 +5,7 @@ Imports ParticleToy.Behaviour
 Public Class cFlowMapBh
     Implements IBehaviour
 
-    Private Const SCALE As Single = 0.005
+    Private Const SCALE As Single = 0.0075
 
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get

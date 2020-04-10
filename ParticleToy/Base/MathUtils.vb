@@ -112,11 +112,11 @@
     End Function
 
     <DebuggerHidden>
-    Public Function XYToDegreesFastest(ByVal xy As PointF, ByVal origin As PointF, ScreenWidth As Integer, ScreenHeight As Integer) As Double
+    Public Function XYToDegreesFastest(ByVal xy As PointF, ByVal origin As PointF, ScreenSize As Size) As Double
         Dim Angle As Double = XYToDegrees(xy, origin)
         Dim Delta As Double = DeltaBetweed(xy, origin)
         For Each Side As Integer() In OutSides
-            Dim P As New PointF(xy.X + (Side(0) * ScreenWidth), xy.Y + (Side(1) * ScreenHeight))
+            Dim P As New PointF(xy.X + (Side(0) * ScreenSize.Width), xy.Y + (Side(1) * ScreenSize.Height))
             Dim d As Double = DeltaBetweed(origin, P)
             If d < Delta Then
                 Delta = d
@@ -127,10 +127,10 @@
     End Function
 
     <DebuggerHidden>
-    Public Function DeltaBetweedFastest(xy As PointF, origin As PointF, ScreenWidth As Integer, ScreenHeight As Integer) As Double
+    Public Function DeltaBetweedFastest(xy As PointF, origin As PointF, ScreenSize As Size) As Double
         Dim Delta As Double = DeltaBetweed(xy, origin)
         For Each Side As Integer() In OutSides
-            Dim P As New PointF(xy.X + (Side(0) * ScreenWidth), xy.Y + (Side(1) * ScreenHeight))
+            Dim P As New PointF(xy.X + (Side(0) * ScreenSize.Width), xy.Y + (Side(1) * ScreenSize.Height))
             Dim d As Double = DeltaBetweed(origin, P)
             If d < Delta Then
                 Delta = d

@@ -28,6 +28,7 @@ Partial Class frmMain
         Me.Ticker = New System.Windows.Forms.Timer(Me.components)
         Me.SaveDirDialog = New System.Windows.Forms.SaveFileDialog()
         Me.CommandTxb = New System.Windows.Forms.TextBox()
+        Me.ActivityTicker = New System.Windows.Forms.Timer(Me.components)
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -72,6 +73,11 @@ Partial Class frmMain
         Me.CommandTxb.Visible = False
         Me.CommandTxb.WordWrap = False
         '
+        'ActivityTicker
+        '
+        Me.ActivityTicker.Enabled = True
+        Me.ActivityTicker.Interval = 6000
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -93,4 +99,5 @@ Partial Class frmMain
     Friend WithEvents Ticker As System.Windows.Forms.Timer
     Friend WithEvents SaveDirDialog As SaveFileDialog
     Friend WithEvents CommandTxb As TextBox
+    Friend WithEvents ActivityTicker As Timer
 End Class

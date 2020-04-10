@@ -39,7 +39,7 @@ Public Class cAntsBh
                 End If
             Else
                 .Partner = .Parent.ParticleL(.MyIndex - 1)
-                Dim delta As Double = DeltaBetweedFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize.Width, Game.ScreenSize.Height)
+                Dim delta As Double = DeltaBetweedFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize)
                 If delta > 5 Then
                     If delta > 300 Then
                         .TargetSpeed = MAX_SPEED
@@ -49,7 +49,7 @@ Public Class cAntsBh
                         .TargetSpeed = 4
                     End If
                     .FoundAnt = True
-                    .TargetAngel = RndDirectedAngel(XYToDegreesFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize.Width, Game.ScreenSize.Height), 45)
+                    .TargetAngel = RndDirectedAngel(XYToDegreesFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize), 45)
                 Else
                     .TargetSpeed = 0
                     .CurrentSpeed = 0
