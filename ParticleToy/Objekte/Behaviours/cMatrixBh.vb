@@ -5,28 +5,50 @@ Imports ParticleToy.Behaviour
 Public Class cMatrixBh
     Implements IBehaviour
 
+    Private ColMan As New SimpleColorManager(Color.FromArgb(255, 0, 205, 0), 100) With {.Mode = IColorManager.Modes.Replace}
+
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
             Return "matrix"
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
-        Particle.CurrentColor = Particle.Color
-        Particle.SpeedIsSet = False
+    Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements IBehaviour.Name
+        Get
+            Return "The Matrix"
+        End Get
+    End Property
+
+    Public ReadOnly Property ColorManager As IColorManager Implements IBehaviour.ColorManager
+        Get
+            Return ColMan
+        End Get
+    End Property
+
+    Public ReadOnly Property OverwriteColorManager As Boolean Implements IBehaviour.OverwriteColorManager
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'End Sub
+
+    Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
+        Particle.TargetSpeed = RndSpeed()
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
 
-        If Not Particle.SpeedIsSet Then
-            Particle.SpeedIsSet = True
-            Particle.TargetSpeed = RndSpeed()
-            Dim m As Double = (Particle.TargetSpeed) / (MAX_SPEED)
-            Particle.CurrentColor = New Pen(Color.FromArgb(255, 0, Math.Round(255 * m), 0))
-        End If
         Particle.TargetAngel = 270
 
         If (Particle.MyIndex Mod 25) = 0 Then

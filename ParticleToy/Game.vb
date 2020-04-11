@@ -49,6 +49,10 @@ Public Class Game
 
     Public Behaviours As New Dictionary(Of String, IBehaviour)
 
+    Public ColorManager As IColorManager = Nothing
+
+    Private LastColorManager As IColorManager = Nothing
+
     Private LastBehaviourKey As String = "-1"
 
     Public Overrides Sub Init()
@@ -119,14 +123,27 @@ Public Class Game
                 End If
                 Dim CurrentBehaviour As IBehaviour = Behaviours(BehaviourKey)
 
-                Dim NotBehaviour As IBehaviour = Nothing
+                Dim OffBehaviour As IBehaviour = Nothing
+                Dim OnBehaviour As IBehaviour = Nothing
                 If LastBehaviourKey <> BehaviourKey Then
-                    NotBehaviour = Behaviours(LastBehaviourKey)
+                    OffBehaviour = Behaviours(LastBehaviourKey)
+                    OnBehaviour = Behaviours(BehaviourKey)
+                    LastBehaviourKey = BehaviourKey
+                    If OnBehaviour.OverwriteColorManager Then
+                        ColorManager = OnBehaviour.ColorManager
+                    ElseIf ColorManager Is Nothing Then
+                        ColorManager = OnBehaviour.ColorManager
+                    End If
                 End If
-                LastBehaviourKey = BehaviourKey
+
+                Dim OnColorManager As IColorManager = Nothing
+                If LastColorManager IsNot ColorManager Then
+                    OnColorManager = ColorManager
+                    LastColorManager = ColorManager
+                End If
 
                 For Each ParticleItm In ParticleL
-                    ParticleItm.Update(Me, Tick, MouseInfo, Keyboard, CurrentBehaviour, NotBehaviour)
+                    ParticleItm.Update(Me, Tick, MouseInfo, Keyboard, OnBehaviour, CurrentBehaviour, OffBehaviour, OnColorManager, ColorManager)
                 Next
 
                 For Each ParticleItm In ParticleL

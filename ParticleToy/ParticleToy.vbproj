@@ -103,9 +103,11 @@
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Base\IColorManager.vb" />
     <Compile Include="Base\KeyBoardInfo.vb" />
     <Compile Include="Base\MathUtils.vb" />
     <Compile Include="Base\MouseInfo.vb" />
+    <Compile Include="Base\SimpleColorManager.vb" />
     <Compile Include="Game.vb" />
     <Compile Include="Base\GameBase.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -133,10 +135,10 @@
     <Compile Include="Objekte\Behaviours\cFlowMapBh.vb" />
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
-    <Compile Include="Objekte\Behaviours\cRainbowBh.vb" />
+    <Compile Include="Objekte\Behaviours\cRainbowCm.vb" />
     <Compile Include="Objekte\Behaviours\cSnakeBh.vb" />
-    <Compile Include="Objekte\Behaviours\cVideoBh.vb" />
-    <Compile Include="Objekte\Behaviours\cImageBh.vb" />
+    <Compile Include="Objekte\Behaviours\cVideoCm.vb" />
+    <Compile Include="Objekte\Behaviours\cImageCm.vb" />
     <Compile Include="Objekte\Behaviours\cMatrixBh.vb" />
     <Compile Include="Objekte\Behaviours\cMirroredBh.vb" />
     <Compile Include="Objekte\Behaviours\cNoneBh.vb" />
@@ -198,6 +200,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\Icons\ants.png" />
     <None Include="Resources\b2.png" />
     <None Include="Resources\b1.png" />
   </ItemGroup>

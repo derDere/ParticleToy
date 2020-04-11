@@ -11,12 +11,39 @@ Public Class cStaddyBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
-        Particle.IsElectric = False
-        Particle.CurrentColor = Particle.Color
+    Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements IBehaviour.Name
+        Get
+            Return "Staddy"
+        End Get
+    End Property
+
+    Public ReadOnly Property ColorManager As IColorManager Implements IBehaviour.ColorManager
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property OverwriteColorManager As Boolean Implements IBehaviour.OverwriteColorManager
+        Get
+            Return False
+        End Get
+    End Property
+
+    Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
+        Particle.MinMovementDrawLength = 0
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'End Sub
+
+    Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
+        Particle.MinMovementDrawLength = 1
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave

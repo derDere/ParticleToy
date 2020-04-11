@@ -5,31 +5,58 @@ Imports ParticleToy.Behaviour
 Public Class cAntsBh
     Implements IBehaviour
 
+    Private ColMan As New SimpleColorManager(Color.Chocolate, 100) With {.Mode = IColorManager.Modes.Replace}
+
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
             Return "ants"
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
+    Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
+        Get
+            Return My.Resources.ants
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements IBehaviour.Name
+        Get
+            Return "Ant Colony"
+        End Get
+    End Property
+
+    Public ReadOnly Property ColorManager As IColorManager Implements IBehaviour.ColorManager
+        Get
+            Return ColMan
+        End Get
+    End Property
+
+    Public ReadOnly Property OverwriteColorManager As Boolean Implements IBehaviour.OverwriteColorManager
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
         Particle.Partner = Nothing
         Particle.FoundAnt = False
         Particle.SpeedIsSet = False
-        Particle.CurrentColor = Particle.Color
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
-        If Not Particle.SpeedIsSet Then
-            Particle.SpeedIsSet = True
-            Particle.CurrentColor = New Pen(Color.Chocolate.Randomize(100))
-        End If
+    'Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    '    If Not Particle.SpeedIsSet Then
+    '        Particle.SpeedIsSet = True
+    '        Particle.Curre ntColor = New Pen(Color.Chocolate.Randomize(100))
+    '    End If
+    'End Sub
+
+    Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If .MyIndex = 0 Then
                 .TargetSpeed = 2
-                .CurrentColor = Pens.White
                 If (RND.Next(1000, 9999) Mod 5) = 0 Then
                     Dim m As Integer = 1
                     If (RND.Next(1000, 9999) Mod 2) = 0 Then

@@ -11,13 +11,42 @@ Public Class cMirroredBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
-        Particle.IsElectric = False
-        Particle.CurrentColor = Particle.Color
+    Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements IBehaviour.Name
+        Get
+            Return "Mirrored"
+        End Get
+    End Property
+
+    Public ReadOnly Property ColorManager As IColorManager Implements IBehaviour.ColorManager
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property OverwriteColorManager As Boolean Implements IBehaviour.OverwriteColorManager
+        Get
+            Return False
+        End Get
+    End Property
+
+    Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
         Particle.MirrorPoint = Nothing
+        Particle.Partner = Nothing
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'End Sub
+
+    Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
+        If (Particle.MyIndex Mod 2) <> 0 Then
+            Particle.Partner = Game.ParticleL(Particle.MyIndex - 1)
+        End If
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
@@ -36,7 +65,7 @@ Public Class cMirroredBh
                     End If
                     .TargetAngel = RndDirectedAngel(XYToDegrees(.MirrorPoint, .CurrentPosition), 180)
                 End If
-                Dim G As Integer = ((((.CurrentPosition.X + .CurrentPosition.Y) / 2) + (2 * Tick)) Mod 256)
+                Dim G As Integer = (((.CurrentPosition.Y) + (2 * Tick)) Mod 256)
                 If G < 128 Then
                     G += 128
                 Else
@@ -44,10 +73,10 @@ Public Class cMirroredBh
                 End If
                 .CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, 0, G))
             Else
-                Dim Partner As Particle = .Parent.ParticleL(.MyIndex - 1)
-                .LastPosition = New PointF(Game.ScreenSize.Width - Partner.LastPosition.X, Partner.LastPosition.Y)
-                .CurrentPosition = New PointF(Game.ScreenSize.Width - Partner.CurrentPosition.X, Partner.CurrentPosition.Y)
-                .CurrentColor = Partner.CurrentColor
+                .LastPosition = New PointF(Game.ScreenSize.Width - .Partner.LastPosition.X, .Partner.LastPosition.Y)
+                .CurrentPosition = New PointF(Game.ScreenSize.Width - .Partner.CurrentPosition.X, .Partner.CurrentPosition.Y)
+                .CurrentColor = .Partner.CurrentColor
+                .DrawLineDelta = DeltaBetweed(.LastPosition, .CurrentPosition)
                 Return False
             End If
         End With

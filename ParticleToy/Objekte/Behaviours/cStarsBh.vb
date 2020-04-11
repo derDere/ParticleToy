@@ -11,23 +11,43 @@ Public Class cStarsBh
         End Get
     End Property
 
-    Public Sub NormalizeNot(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.NormalizeNot
-        Particle.IsElectric = False
-        Particle.CurrentColor = Particle.Color
-        Particle.IsAStar = False
+    Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
+        Get
+            Throw New NotImplementedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements IBehaviour.Name
+        Get
+            Return "Stars"
+        End Get
+    End Property
+
+    Public ReadOnly Property ColorManager As IColorManager Implements IBehaviour.ColorManager
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property OverwriteColorManager As Boolean Implements IBehaviour.OverwriteColorManager
+        Get
+            Return False
+        End Get
+    End Property
+
+    Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
     End Sub
 
-    Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'Public Sub Normalize(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.Normalize
+    'End Sub
+
+    Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
+        Particle.TargetSpeed = MIN_SPEED + (RND.Next(1000) Mod 2)
+        Particle.TargetAngel = 0
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            If Not .IsAStar Then
-                .IsAStar = True
-                .TargetSpeed = MIN_SPEED + (RND.Next(1000) Mod 2)
-                .TargetAngel = 0
-            End If
-
             Dim MouseDelta As Double = DeltaBetweed(.CurrentPosition, MouseInfo.Position)
             Dim ColorPart As Integer = -1
             For Each Anc In .Ancs.Anchors
