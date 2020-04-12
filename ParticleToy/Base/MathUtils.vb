@@ -1,4 +1,16 @@
-﻿Module MathUtils
+﻿Imports System.Runtime.CompilerServices
+
+Module MathUtils
+
+    <Extension>
+    Public Function Add(P As PointF, X As Double, Y As Double) As PointF
+        Return New PointF(P.X + X, P.Y + Y)
+    End Function
+
+    <Extension>
+    Public Function Add(P1 As PointF, P2 As PointF) As PointF
+        Return New PointF(P1.X + P2.X, P1.Y + P2.Y)
+    End Function
 
     Public OutSides As Integer()() = {
         New Integer() {-1, -1},

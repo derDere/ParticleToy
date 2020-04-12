@@ -26,10 +26,16 @@ Public Class Particle
     'Public GlowingPen As New Pen(Drawing.Color.FromArgb(Glowing, 255, 255, 255), 1)
 
     Friend GolPos As Point
+    Friend SilkPos As PointF
     Public Shared ReadOnly GolQuader As Integer = Math.Sqrt(Game.PARTICLE_NUMBER)
     Public GOL_MARGIN As Integer = 5
     Public Shared Gol_Matrix(GolQuader, GolQuader) As Particle
     Public GolMP As Point
+
+    Private Const SILK_GRID_WIDTH As Integer = 122
+    Private Const SILK_GRID_HEIGHT As Integer = 82
+    Private Const SILK_GRID_CELL_WIDTH As Double = Game.OPT_SIZE_W / (SILK_GRID_WIDTH + 1)
+    Private Const SILK_GRID_CELL_HEIGHT As Double = Game.OPT_SIZE_H / (SILK_GRID_HEIGHT + 1)
 
     Public Sub New(Ancs As Anchors, Position As PointF, Index As Integer, Parent As Game)
         Me.Parent = Parent
@@ -43,14 +49,24 @@ Public Class Particle
         CurrentPosition = Position
         LastPosition = Position
         Me.Ancs = Ancs
+
         'Calculate GameOfLife Position
-        Dim X As Integer = MyIndex Mod GolQuader
-        Dim Y As Integer = (MyIndex - (MyIndex Mod GolQuader)) / GolQuader
-        GolPos = New Point((X * GOL_MARGIN) + ((Game.OPT_SIZE_W - (GolQuader * GOL_MARGIN)) / 2),
+        If True Then
+            Dim X As Integer = MyIndex Mod GolQuader
+            Dim Y As Integer = (MyIndex - X) / GolQuader
+            GolPos = New Point((X * GOL_MARGIN) + ((Game.OPT_SIZE_W - (GolQuader * GOL_MARGIN)) / 2),
                            (Y * GOL_MARGIN) + ((Game.OPT_SIZE_H - (GolQuader * GOL_MARGIN)) / 2))
-        GolMP = New Point(X, Y)
-        If Gol_Matrix(X, Y) Is Nothing Then
-            Gol_Matrix(X, Y) = Me
+            GolMP = New Point(X, Y)
+            If Gol_Matrix(X, Y) Is Nothing Then
+                Gol_Matrix(X, Y) = Me
+            End If
+        End If
+
+        'Calculate Silk Position
+        If True Then
+            Dim X As Double = MyIndex Mod SILK_GRID_WIDTH
+            Dim Y As Double = (MyIndex - X) / SILK_GRID_WIDTH
+            SilkPos = New PointF((X * SILK_GRID_CELL_WIDTH) + SILK_GRID_CELL_WIDTH, (Y * SILK_GRID_CELL_HEIGHT) + SILK_GRID_CELL_HEIGHT)
         End If
     End Sub
 

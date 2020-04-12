@@ -136,6 +136,7 @@
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
     <Compile Include="Objekte\Behaviours\cRainbowCm.vb" />
+    <Compile Include="Objekte\Behaviours\cSilkBh.vb" />
     <Compile Include="Objekte\Behaviours\cSnakeBh.vb" />
     <Compile Include="Objekte\Behaviours\cVideoCm.vb" />
     <Compile Include="Objekte\Behaviours\cImageCm.vb" />
