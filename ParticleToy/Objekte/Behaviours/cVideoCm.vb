@@ -15,7 +15,7 @@ Public Class cVideoCm
 
     Public ReadOnly Property Icon As Bitmap Implements IColorManager.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.vid
         End Get
     End Property
 

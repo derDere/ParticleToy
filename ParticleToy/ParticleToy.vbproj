@@ -183,6 +183,10 @@
     <None Include="packages.config" />
     <None Include="Resources\Clownfishes_in_Anemone_800x600_muted_frames_jpg.zip" />
     <None Include="Resources\fs.zip" />
+    <None Include="Work\0-12+.pdn" />
+    <None Include="Work\ants.pdn" />
+    <None Include="Work\Font.pdn" />
+    <None Include="Work\rainbow.pdn" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
@@ -201,6 +205,29 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\Icons\game_of_life.png" />
+    <None Include="Resources\Icons\wind.png" />
+    <None Include="Resources\Icons\vid.png" />
+    <None Include="Resources\Icons\unknown.png" />
+    <None Include="Resources\Icons\snake.png" />
+    <None Include="Resources\Icons\silk.png" />
+    <None Include="Resources\Icons\rainbow.png" />
+    <None Include="Resources\Icons\matrix.png" />
+    <None Include="Resources\Icons\img.png" />
+    <None Include="Resources\Icons\cicada.png" />
+    <None Include="Resources\Icons\anc_9.png" />
+    <None Include="Resources\Icons\anc_8.png" />
+    <None Include="Resources\Icons\anc_7.png" />
+    <None Include="Resources\Icons\anc_6.png" />
+    <None Include="Resources\Icons\anc_5.png" />
+    <None Include="Resources\Icons\anc_4.png" />
+    <None Include="Resources\Icons\anc_3.png" />
+    <None Include="Resources\Icons\anc_2.png" />
+    <None Include="Resources\Icons\anc_12.png" />
+    <None Include="Resources\Icons\anc_11.png" />
+    <None Include="Resources\Icons\anc_10.png" />
+    <None Include="Resources\Icons\anc_1.png" />
+    <None Include="Resources\Icons\anc_0.png" />
     <None Include="Resources\Icons\ants.png" />
     <None Include="Resources\b2.png" />
     <None Include="Resources\b1.png" />

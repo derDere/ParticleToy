@@ -14,7 +14,7 @@ Public Class cElectricBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon, IColorManager.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.anc_6
         End Get
     End Property
 

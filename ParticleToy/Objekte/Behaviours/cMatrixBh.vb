@@ -15,7 +15,7 @@ Public Class cMatrixBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.matrix
         End Get
     End Property
 

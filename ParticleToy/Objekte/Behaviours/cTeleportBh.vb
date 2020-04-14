@@ -13,7 +13,7 @@ Public Class cTeleportBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.anc_2
         End Get
     End Property
 

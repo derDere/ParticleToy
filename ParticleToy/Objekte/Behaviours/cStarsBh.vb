@@ -13,7 +13,7 @@ Public Class cStarsBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.anc_10
         End Get
     End Property
 

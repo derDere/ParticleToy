@@ -13,7 +13,7 @@ Public Class cNoneBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.unknown
         End Get
     End Property
 

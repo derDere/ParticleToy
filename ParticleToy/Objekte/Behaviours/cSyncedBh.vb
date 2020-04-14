@@ -13,7 +13,7 @@ Public Class cSyncedBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.anc_7
         End Get
     End Property
 

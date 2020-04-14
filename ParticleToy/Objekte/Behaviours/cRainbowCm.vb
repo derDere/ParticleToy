@@ -15,7 +15,7 @@ Public Class cRainbowCm
 
     Public ReadOnly Property Icon As Bitmap Implements IColorManager.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.rainbow
         End Get
     End Property
 

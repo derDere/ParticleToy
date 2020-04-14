@@ -15,7 +15,7 @@ Public Class cImageCm
 
     Public ReadOnly Property Icon As Bitmap Implements IColorManager.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.img
         End Get
     End Property
 

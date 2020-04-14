@@ -15,7 +15,7 @@ Public Class cSnakeBh
 
     Public ReadOnly Property Icon As Bitmap Implements IBehaviour.Icon
         Get
-            Throw New NotImplementedException()
+            Return My.Resources.snake
         End Get
     End Property
 
