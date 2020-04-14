@@ -16,7 +16,7 @@ Public Class SimpleColorManager
 
     Public ReadOnly Property Icon As Bitmap Implements IColorManager.Icon
         Get
-            Return Nothing
+            Return My.Resources.color
         End Get
     End Property
 

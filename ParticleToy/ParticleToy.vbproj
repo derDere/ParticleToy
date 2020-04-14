@@ -205,6 +205,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\Icons\color.png" />
     <None Include="Resources\Icons\game_of_life.png" />
     <None Include="Resources\Icons\wind.png" />
     <None Include="Resources\Icons\vid.png" />
