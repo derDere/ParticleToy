@@ -76,6 +76,7 @@ Public Class cMirroredBh
                 .LastPosition = New PointF(Game.ScreenSize.Width - .Partner.LastPosition.X, .Partner.LastPosition.Y)
                 .CurrentPosition = New PointF(Game.ScreenSize.Width - .Partner.CurrentPosition.X, .Partner.CurrentPosition.Y)
                 .CurrentColor = .Partner.CurrentColor
+                .drawColor = .Partner.drawColor
                 .DrawLineDelta = DeltaBetweed(.LastPosition, .CurrentPosition)
                 Return False
             End If

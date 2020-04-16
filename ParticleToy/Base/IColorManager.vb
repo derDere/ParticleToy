@@ -2,8 +2,9 @@
     Enum Modes
         None = False
         Replace
-        [AND]
-        [OR]
+        [And]
+        [Or]
+        [Xor]
         Multiply
         Additive
         Subtractive

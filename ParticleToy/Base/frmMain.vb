@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.ComponentModel
+Imports System.Runtime.InteropServices
 
 Public Class frmMain
 
@@ -14,17 +15,14 @@ Public Class frmMain
     Private MouseW As Integer = 0
     Private PressedKeys As New List(Of Keys)
 
-    Private Const CONSOLE_KEY As Keys = Keys.Enter ' Keys.Oem5 ' = ^
-
-    Private ConsoleState As GameBase.ConsoleState = GameBase.ConsoleState.Closed
-
     Private Recording As Boolean = False
     Private RecordingFrame As Integer = 0
     Private RecordingDir As IO.DirectoryInfo = Nothing
 
-    Private Game As GameBase = New Game
+    Private Game As Game = New Game
     Private Tick As Integer = 0
     Private B As Bitmap
+    Private ModeForm As New frmModes
 
     Shared Sub New()
         Dim defaultCurB As New Bitmap(32, 32)
@@ -77,6 +75,24 @@ Public Class frmMain
         Ticker_Tick(Nothing, Nothing)
 
         Ticker.Start()
+
+        ModeForm.Owner = Me
+        AddHandler ModeForm.ControlsEle.ModeSelect, AddressOf ModeForm_ModeSelected
+        AddHandler ModeForm.ControlsEle.ColorSelect, AddressOf ModeForm_ColorSelected
+
+        ModeForm.Show()
+    End Sub
+
+    Private Sub ModeForm_ColorSelected(CM As IColorManager)
+        Game.ColorManager = CM
+    End Sub
+
+    Private Sub ModeForm_ModeSelected(Mode As String)
+        If IsNumeric(Mode) Then
+            Game.SetAnchorCount(CInt(Mode))
+        Else
+            Game.Console.EnteredMode = Mode
+        End If
     End Sub
 
     Private Sub Ticker_Tick(sender As Object, e As EventArgs) Handles Ticker.Tick
@@ -119,19 +135,30 @@ Public Class frmMain
 
         MouseW = 0
 
-        Tick += 1
+        Tick += 1S
         SW.Stop()
         Dim TickDelay As Integer = 16 - SW.ElapsedMilliseconds
         If TickDelay < 1 Then TickDelay = 1
         Ticker.Interval = TickDelay
         Dim ts As Integer = SW.ElapsedMilliseconds
         If ts < 16 Then ts = 16
-        Me.Text = Title & "  ‒  " & Math.Round(1000 / ts).ToString("00") & " FPS  ‒  " & DirectCast(Game, Game).Ancs.Anchors.Count & " Anchors" & IIf(Recording, " ‒ Recording", "")
+        Me.Text = Title & "  ‒  " & Math.Round(1000 / ts).ToString("00") &
+                  " FPS  ‒  " & DirectCast(Game, Game).Ancs.Anchors.Count &
+                  " Anchors" &
+                  IIf(String.IsNullOrEmpty(Game.Console.EnteredMode), "", " ‒ Mode: " & ModeDisplay(Game.Console.EnteredMode)) &
+                  IIf(Recording, " ‒ Recording", "")
 
         KeyBoardInfo.LastKeys = KeyInf.KeysDown
 
         Ticker.Start()
     End Sub
+
+    Public Function ModeDisplay(modekey As String) As String
+        If ParticleToy.Controls.Behaviours.ContainsKey(modekey) Then
+            Return ParticleToy.Controls.Behaviours(modekey).Name
+        End If
+        Return ParticleToy.Controls.Behaviours("unknown").Name
+    End Function
 
     Private Sub ScreenImgBox_MouseDown(sender As Object, e As MouseEventArgs) Handles ScreenImgBox.MouseDown
         ScreenImgBox.Cursor = CursorRed
@@ -170,11 +197,6 @@ Public Class frmMain
     End Sub
 
     Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-        If e.KeyCode = CONSOLE_KEY Then
-            e.SuppressKeyPress = False
-            SetConsoleState(Not ConsoleState)
-        End If
-        If ConsoleState = GameBase.ConsoleState.Open Then Exit Sub
         If Not PressedKeys.Contains(e.KeyCode) Then _
             PressedKeys.Add(e.KeyCode)
         If e.KeyCode = Keys.F11 AndAlso e.Modifiers = Keys.Control Then
@@ -247,57 +269,16 @@ Public Class frmMain
         End Set
     End Property
 
-    Private Sub SetConsoleState(State As GameBase.ConsoleState)
-        ScreenImgBox.Select()
-        ConsoleState = State
-        Game.ConsoleToggle(State)
-        CommandTxb.Visible = State
-        'CommandTxb.Enabled = State
-        If CommandTxb.Enabled Then
-            CommandTxb.Text = ""
-            CommandTxb.Select()
-        End If
-    End Sub
-
-    Private Sub CommandTxb_KeyUp(sender As Object, e As KeyEventArgs) Handles CommandTxb.KeyUp
-        Dim selStart As Integer = CommandTxb.SelectionStart
-        Dim selLength As Integer = CommandTxb.SelectionLength
-        If CommandTxb.Text.StartsWith("^") Then
-            CommandTxb.Text = CommandTxb.Text.Substring(1)
-            If selStart = 0 Then
-                CommandTxb.Select(selStart, selLength - 1)
-            Else
-                CommandTxb.Select(selStart - 1, selLength)
-            End If
-        End If
-        If e.KeyCode = CONSOLE_KEY Then
-            e.Handled = True
-            e.SuppressKeyPress = True
-        End If
-    End Sub
-
-    Private Sub CommandTxb_KeyDown(sender As Object, e As KeyEventArgs) Handles CommandTxb.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            Game.ExecuteCommand(CommandTxb.Text.ToLower)
-            CommandTxb.Text = ""
-            e.Handled = True
-            e.SuppressKeyPress = False
-        End If
-        If e.KeyCode = CONSOLE_KEY Then
-            CommandTxb.Text = ""
-            SetConsoleState(Not ConsoleState)
-            e.Handled = True
-            e.SuppressKeyPress = False
-        End If
-        If Not ConsoleState Then
-            e.Handled = True
-            e.SuppressKeyPress = False
-            CommandTxb.Text = ""
-        End If
-    End Sub
-
     Private Sub ActivityTicker_Tick(sender As Object, e As EventArgs) Handles ActivityTicker.Tick
         SendKeys.Send("{NUMLOCK}{NUMLOCK}")
+    End Sub
+
+    Private Sub frmMain_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+
+    End Sub
+
+    Private Sub frmMain_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        ModeForm.Close()
     End Sub
 
 End Class

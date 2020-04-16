@@ -85,6 +85,7 @@ Public Class Particle
     Friend GolPositionFound As Boolean = False
     Friend FoundAnt As Boolean = False
     Friend DrawLineDelta As Double = 2
+    Friend drawColor As Pen = CurrentColor
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard, OnBehaviour As IBehaviour, Behaviour As IBehaviour, OffBehaviour As IBehaviour, OnColorManager As IColorManager, ColorManager As IColorManager)
         'Normalisierung
@@ -114,14 +115,15 @@ Public Class Particle
 
         'Color Management
         '#######################################################################################
+        drawColor = CurrentColor
         If OnColorManager IsNot Nothing Then _
-            ManageColor(OnColorManager, Game, Tick, MouseInfo, Keyboard, True)
-        ManageColor(ColorManager, Game, Tick, MouseInfo, Keyboard, False)
+            drawColor = ManageColor(drawColor, OnColorManager, Game, Tick, MouseInfo, Keyboard, True)
+        drawColor = ManageColor(drawColor, ColorManager, Game, Tick, MouseInfo, Keyboard, False)
 
 
         'Farb Gleichsetzung
         '#######################################################################################
-        CurrentColorBru = New SolidBrush(CurrentColor.Color)
+        CurrentColorBru = New SolidBrush(drawColor.Color)
 
         'Steuerung
         '#######################################################################################
@@ -167,7 +169,7 @@ Public Class Particle
         End If
     End Sub
 
-    Private Sub ManageColor(ColorManager As IColorManager, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard, IsTurnOn As Boolean)
+    Private Function ManageColor(CurrentColor As Pen, ColorManager As IColorManager, Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard, IsTurnOn As Boolean) As Pen
         Dim ManagedColor As Color? = Nothing
         If ColorManager IsNot Nothing Then
             If IsTurnOn Then
@@ -178,42 +180,49 @@ Public Class Particle
             If ManagedColor IsNot Nothing Then
                 Select Case ColorManager.Mode
                     Case IColorManager.Modes.Additive
-                        Dim a As Integer = Math.Floor((CurrentColor.Color.A + ManagedColor.Value.A) / 2)
-                        Dim r As Integer = Math.Floor((CurrentColor.Color.R + ManagedColor.Value.R) / 2)
-                        Dim g As Integer = Math.Floor((CurrentColor.Color.G + ManagedColor.Value.G) / 2)
-                        Dim b As Integer = Math.Floor((CurrentColor.Color.B + ManagedColor.Value.B) / 2)
-                        CurrentColor = New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+                        Dim a As Integer = 255 'Math.Floor((CInt(CurrentColor.Color.A) + CInt(ManagedColor.Value.A)) / 2)
+                        Dim r As Integer = Math.Floor((CInt(CurrentColor.Color.R) + CInt(ManagedColor.Value.R)) / 2)
+                        Dim g As Integer = Math.Floor((CInt(CurrentColor.Color.G) + CInt(ManagedColor.Value.G)) / 2)
+                        Dim b As Integer = Math.Floor((CInt(CurrentColor.Color.B) + CInt(ManagedColor.Value.B)) / 2)
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
 
-                    Case IColorManager.Modes.AND
-                        Dim a As Integer = CurrentColor.Color.A And ManagedColor.Value.A
+                    Case IColorManager.Modes.And
+                        Dim a As Integer = 255 'CurrentColor.Color.A And ManagedColor.Value.A
                         Dim r As Integer = CurrentColor.Color.R And ManagedColor.Value.R
                         Dim g As Integer = CurrentColor.Color.G And ManagedColor.Value.G
                         Dim b As Integer = CurrentColor.Color.B And ManagedColor.Value.B
-                        CurrentColor = New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
 
                     Case IColorManager.Modes.Multiply
-                        Dim a As Integer = Math.Floor(CurrentColor.Color.A * (ManagedColor.Value.A / 255))
+                        Dim a As Integer = 255 'Math.Floor(CurrentColor.Color.A * (ManagedColor.Value.A / 255))
                         Dim r As Integer = Math.Floor(CurrentColor.Color.R * (ManagedColor.Value.R / 255))
                         Dim g As Integer = Math.Floor(CurrentColor.Color.G * (ManagedColor.Value.G / 255))
                         Dim b As Integer = Math.Floor(CurrentColor.Color.B * (ManagedColor.Value.B / 255))
-                        CurrentColor = New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
 
-                    Case IColorManager.Modes.OR
-                        Dim a As Integer = CurrentColor.Color.A Or ManagedColor.Value.A
+                    Case IColorManager.Modes.Or
+                        Dim a As Integer = 255 'CurrentColor.Color.A Or ManagedColor.Value.A
                         Dim r As Integer = CurrentColor.Color.R Or ManagedColor.Value.R
                         Dim g As Integer = CurrentColor.Color.G Or ManagedColor.Value.G
                         Dim b As Integer = CurrentColor.Color.B Or ManagedColor.Value.B
-                        CurrentColor = New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+
+                    Case IColorManager.Modes.Xor
+                        Dim a As Integer = 255 'CurrentColor.Color.A Or ManagedColor.Value.A
+                        Dim r As Integer = CurrentColor.Color.R Xor ManagedColor.Value.R
+                        Dim g As Integer = CurrentColor.Color.G Xor ManagedColor.Value.G
+                        Dim b As Integer = CurrentColor.Color.B Xor ManagedColor.Value.B
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
 
                     Case IColorManager.Modes.Replace
-                        CurrentColor = New Pen(ManagedColor.Value, CurrentColor.Width)
+                        Return New Pen(ManagedColor.Value, CurrentColor.Width)
 
                     Case IColorManager.Modes.Subtractive
-                        Dim a As Integer = Math.Floor(CurrentColor.Color.A * (1 - (ManagedColor.Value.A / 255)))
-                        Dim r As Integer = Math.Floor(CurrentColor.Color.R * (1 - (ManagedColor.Value.R / 255)))
-                        Dim g As Integer = Math.Floor(CurrentColor.Color.G * (1 - (ManagedColor.Value.G / 255)))
-                        Dim b As Integer = Math.Floor(CurrentColor.Color.B * (1 - (ManagedColor.Value.B / 255)))
-                        CurrentColor = New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
+                        Dim a As Integer = 255 'Math.Floor(CSng(CurrentColor.Color.A) * (1 - (ManagedColor.Value.A / 255)))
+                        Dim r As Integer = Math.Floor(CSng(CurrentColor.Color.R) * (1 - (ManagedColor.Value.R / 255)))
+                        Dim g As Integer = Math.Floor(CSng(CurrentColor.Color.G) * (1 - (ManagedColor.Value.G / 255)))
+                        Dim b As Integer = Math.Floor(CSng(CurrentColor.Color.B) * (1 - (ManagedColor.Value.B / 255)))
+                        Return New Pen(Drawing.Color.FromArgb(a, r, g, b), CurrentColor.Width)
 
                     Case Else
                         'Nothing to do
@@ -221,7 +230,8 @@ Public Class Particle
                 End Select
             End If
         End If
-    End Sub
+        Return CurrentColor
+    End Function
 
     Friend Shared LightningPen As New Pen(Drawing.Color.FromArgb(64, 255, 255, 255), 1)
     Public Sub Draw(G As Graphics)
@@ -232,7 +242,7 @@ Public Class Particle
             If DrawLineDelta = 0 Then
                 G.FillRectangle(CurrentColorBru, CurrentPosition.X, CurrentPosition.Y, 1, 1)
             Else
-                G.DrawLine(CurrentColor, LastPosition, CurrentPosition)
+                G.DrawLine(drawColor, LastPosition, CurrentPosition)
             End If
             '    If Not HideNoMovement Then
             '        'G.FillRectangle(CurrentColorBru, CurrentPosition.X, CurrentPosition.Y, 1, 1)

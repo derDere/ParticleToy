@@ -47,7 +47,9 @@ Public Class cSilkBh
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            Dim mouseDelta As Double = DeltaBetweed(.SilkPos, MouseInfo.Position) / 10
+            Dim mouseDelta As Double = 1000000
+            If MouseInfo.Position IsNot Nothing Then _
+                mouseDelta = DeltaBetweed(.SilkPos, MouseInfo.Position) / 10
             Dim noiseAngle As Double = SimplexNoise.Noise.CalcPixel3D(.SilkPos.X, .SilkPos.Y, Tick + mouseDelta, SCALE) / 255
             Dim noiseRadius As Double = SimplexNoise.Noise.CalcPixel3D(.SilkPos.X + RADIUS_OFF, .SilkPos.Y + RADIUS_OFF, Tick + mouseDelta + RADIUS_OFF, SCALE) / 255
 

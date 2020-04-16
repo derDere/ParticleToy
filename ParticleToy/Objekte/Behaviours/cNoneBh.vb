@@ -7,7 +7,7 @@ Public Class cNoneBh
 
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
-            Return "-1"
+            Return "unknown"
         End Get
     End Property
 

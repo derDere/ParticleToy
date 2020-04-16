@@ -48,7 +48,8 @@ Public Class cFlowingBh
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             Dim Rocks As New List(Of PointF)
-            Rocks.Add(MouseInfo.Position)
+            If MouseInfo.Position IsNot Nothing Then _
+                Rocks.Add(MouseInfo.Position)
             Rocks.AddRange(.Ancs.Anchors)
             Dim IsNear As PointF? = Nothing
             For Each Rock As PointF In Rocks

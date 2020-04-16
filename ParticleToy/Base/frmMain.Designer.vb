@@ -27,7 +27,6 @@ Partial Class frmMain
         Me.ScreenImgBox = New System.Windows.Forms.PictureBox()
         Me.Ticker = New System.Windows.Forms.Timer(Me.components)
         Me.SaveDirDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.CommandTxb = New System.Windows.Forms.TextBox()
         Me.ActivityTicker = New System.Windows.Forms.Timer(Me.components)
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -54,25 +53,6 @@ Partial Class frmMain
         Me.SaveDirDialog.OverwritePrompt = False
         Me.SaveDirDialog.Title = "Choose target folder"
         '
-        'CommandTxb
-        '
-        Me.CommandTxb.AcceptsReturn = True
-        Me.CommandTxb.AcceptsTab = True
-        Me.CommandTxb.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CommandTxb.BackColor = System.Drawing.Color.Black
-        Me.CommandTxb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.CommandTxb.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CommandTxb.ForeColor = System.Drawing.Color.Yellow
-        Me.CommandTxb.HideSelection = False
-        Me.CommandTxb.Location = New System.Drawing.Point(0, 580)
-        Me.CommandTxb.Multiline = True
-        Me.CommandTxb.Name = "CommandTxb"
-        Me.CommandTxb.Size = New System.Drawing.Size(800, 20)
-        Me.CommandTxb.TabIndex = 1
-        Me.CommandTxb.Visible = False
-        Me.CommandTxb.WordWrap = False
-        '
         'ActivityTicker
         '
         Me.ActivityTicker.Enabled = True
@@ -84,7 +64,6 @@ Partial Class frmMain
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.DimGray
         Me.ClientSize = New System.Drawing.Size(800, 600)
-        Me.Controls.Add(Me.CommandTxb)
         Me.Controls.Add(Me.ScreenImgBox)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmMain"
@@ -92,12 +71,10 @@ Partial Class frmMain
         Me.Text = "Particle Toy"
         CType(Me.ScreenImgBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents ScreenImgBox As System.Windows.Forms.PictureBox
     Friend WithEvents Ticker As System.Windows.Forms.Timer
     Friend WithEvents SaveDirDialog As SaveFileDialog
-    Friend WithEvents CommandTxb As TextBox
     Friend WithEvents ActivityTicker As Timer
 End Class

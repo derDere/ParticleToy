@@ -40,31 +40,22 @@ Public Class Game
     Public BlinkL As New List(Of Blink)
     Public Menu As New Menu(Me)
     Public Console As New GameConsole(Me)
-    Public ZipSysMan As New ZipSystemManager
 
     Public Const OPT_SIZE_W As Integer = 800
     Public Const OPT_SIZE_H As Integer = 600
     Public Const PARTICLE_NUMBER As Integer = 10000
     Public Const HINT_TICK_LENGTH As Integer = 50
 
-    Public Behaviours As New Dictionary(Of String, IBehaviour)
-
     Public ColorManager As IColorManager = Nothing
 
     Private LastColorManager As IColorManager = Nothing
 
-    Private LastBehaviourKey As String = "-1"
+    Private LastBehaviourKey As String = "unknown"
 
     Public Overrides Sub Init()
         MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
         For index = 1 To PARTICLE_NUMBER
             ParticleL.Add(New Particle(Ancs, RndPoint(ScreenSize), index - 1, Me))
-        Next
-        For Each ItmType As Type In Reflection.Assembly.GetExecutingAssembly.GetTypes
-            If ItmType.GetInterfaces.Any(Function(I) I.Name = "IBehaviour") Then
-                Dim IBObj As IBehaviour = Activator.CreateInstance(ItmType)
-                Behaviours.Add(IBObj.Key, IBObj)
-            End If
         Next
     End Sub
 
@@ -104,11 +95,7 @@ Public Class Game
             If Keyboard.Pressed(Keys.F11) Then FunctionKeySetAncorCount = 11
             If Keyboard.Pressed(Keys.F12) Then FunctionKeySetAncorCount = 12
             If FunctionKeySetAncorCount <> 0 Then
-                Console.EnteredMode = ""
-                FixedAncors.Anchors.Clear()
-                For n = 1 To FunctionKeySetAncorCount
-                    FixedAncors.Anchors.Add(RndPoint(ScreenSize))
-                Next
+                SetAnchorCount(FunctionKeySetAncorCount)
             End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
             If Not DrawInfo Then
@@ -118,16 +105,16 @@ Public Class Game
                 Else
                     BehaviourKey = Console.EnteredMode
                 End If
-                If Not Behaviours.ContainsKey(BehaviourKey) Then
-                    BehaviourKey = "-1"
+                If Not Controls.Behaviours.ContainsKey(BehaviourKey) Then
+                    BehaviourKey = "unknown"
                 End If
-                Dim CurrentBehaviour As IBehaviour = Behaviours(BehaviourKey)
+                Dim CurrentBehaviour As IBehaviour = Controls.Behaviours(BehaviourKey)
 
                 Dim OffBehaviour As IBehaviour = Nothing
                 Dim OnBehaviour As IBehaviour = Nothing
                 If LastBehaviourKey <> BehaviourKey Then
-                    OffBehaviour = Behaviours(LastBehaviourKey)
-                    OnBehaviour = Behaviours(BehaviourKey)
+                    OffBehaviour = Controls.Behaviours(LastBehaviourKey)
+                    OnBehaviour = Controls.Behaviours(BehaviourKey)
                     LastBehaviourKey = BehaviourKey
                     If OnBehaviour.OverwriteColorManager Then
                         ColorManager = OnBehaviour.ColorManager
@@ -145,6 +132,10 @@ Public Class Game
                 For Each ParticleItm In ParticleL
                     ParticleItm.Update(Me, Tick, MouseInfo, Keyboard, OnBehaviour, CurrentBehaviour, OffBehaviour, OnColorManager, ColorManager)
                 Next
+
+                If TypeOf ColorManager Is NoColorManager Then
+                    ColorManager = Nothing
+                End If
 
                 For Each ParticleItm In ParticleL
                     If ParticleItm.WillGlow Then
@@ -168,6 +159,14 @@ Public Class Game
                 ClearBru = New SolidBrush(Color.FromArgb(BG_Alpha, 0, 0, 0))
             End If
         End If
+    End Sub
+
+    Public Sub SetAnchorCount(Count As Integer)
+        Console.EnteredMode = ""
+        FixedAncors.Anchors.Clear()
+        For n = 1 To Count
+            FixedAncors.Anchors.Add(RndPoint(ScreenSize))
+        Next
     End Sub
 
     Public Overrides Sub Draw(G As Graphics)
@@ -209,14 +208,6 @@ Public Class Game
 
         'Draw Console
         Console.Draw(G)
-    End Sub
-
-    Public Overrides Sub ConsoleToggle(State As ConsoleState)
-        Console.State = State
-    End Sub
-
-    Public Overrides Sub ExecuteCommand(Command As String)
-        ZipSysMan.ExecuteCommand(Console, Command)
     End Sub
 
 End Class

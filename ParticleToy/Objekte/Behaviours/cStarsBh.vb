@@ -48,7 +48,9 @@ Public Class cStarsBh
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            Dim MouseDelta As Double = DeltaBetweed(.CurrentPosition, MouseInfo.Position)
+            Dim MouseDelta As Double = 10000000
+            If MouseInfo.Position IsNot Nothing Then _
+                MouseDelta = DeltaBetweed(.CurrentPosition, MouseInfo.Position)
             Dim ColorPart As Integer = -1
             For Each Anc In .Ancs.Anchors
                 Dim AncDelta As Double = DeltaBetweed(.CurrentPosition, Anc)

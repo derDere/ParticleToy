@@ -51,7 +51,8 @@ Public Class cStaddyBh
             .TargetSpeed = 0
             .TargetAngel = RndDegrees()
             Dim Rocks As New List(Of PointF)
-            Rocks.Add(MouseInfo.Position)
+            If MouseInfo.Position IsNot Nothing Then _
+                Rocks.Add(MouseInfo.Position)
             Rocks.AddRange(.Ancs.Anchors)
             Dim IsNear As PointF? = Nothing
             For Each Rock As PointF In Rocks
