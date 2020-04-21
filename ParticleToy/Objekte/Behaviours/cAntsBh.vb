@@ -57,9 +57,9 @@ Public Class cAntsBh
         With Particle
             If .MyIndex = 0 Then
                 .TargetSpeed = 2
-                If (RND.Next(1000, 9999) Mod 5) = 0 Then
+                If chance(5) Then
                     Dim m As Integer = 1
-                    If (RND.Next(1000, 9999) Mod 2) = 0 Then
+                    If chance(2) Then
                         m = -1
                     End If
                     .TargetAngel += 10 * m

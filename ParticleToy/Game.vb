@@ -52,6 +52,13 @@ Public Class Game
 
     Private LastBehaviourKey As String = "unknown"
 
+    Private _CurrentTick As Integer = 0
+    Public ReadOnly Property CurrentTick As Integer
+        Get
+            Return _CurrentTick
+        End Get
+    End Property
+
     Public Overrides Sub Init()
         MyBase._ScreenSize = New Size(OPT_SIZE_W, OPT_SIZE_H) ' My.Computer.Screen.Bounds.Size
         For index = 1 To PARTICLE_NUMBER
@@ -60,10 +67,10 @@ Public Class Game
     End Sub
 
     Public Overrides Sub Update(Tick As Integer, MouseInfo As MouseInfo, Keyboard As KeyBoardInfo)
+        _CurrentTick = Tick
         If Tick > HINT_TICK_LENGTH Then
             DrawHint = False
         End If
-        If Console.State = ConsoleState.Open Then Exit Sub
         If Menu.UpdateAndIsOpen(Tick, MouseInfo, Keyboard) Then
         Else
             DrawInfo = Keyboard.CtrlKeyDown
@@ -99,6 +106,7 @@ Public Class Game
             End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
             If Not DrawInfo Then
+                Console.Update(Me, Tick, MouseInfo, Keyboard)
                 Dim BehaviourKey As String = ""
                 If String.IsNullOrEmpty(Console.EnteredMode) Or String.IsNullOrWhiteSpace(Console.EnteredMode) Then
                     BehaviourKey = Ancs.Anchors.Count
@@ -208,6 +216,11 @@ Public Class Game
 
         'Draw Console
         Console.Draw(G)
+    End Sub
+
+    Public Sub HandleCommand(Command As String)
+        Command = Command.ToLower
+        Console.AddLine(Command)
     End Sub
 
 End Class

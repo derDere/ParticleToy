@@ -1,4 +1,5 @@
 ﻿Imports System.Windows
+Imports System.Windows.Input
 
 Public Class Controls
 
@@ -12,6 +13,8 @@ Public Class Controls
     Public Event ModeSelect(mode As String)
 
     Public Event ColorSelect(color As IColorManager)
+
+    Public Event CommandEntered(command As String)
 
     Public Shared ReadOnly Property Behaviours As New Dictionary(Of String, IBehaviour)
     Public Shared ReadOnly Property ColorManagers As New Dictionary(Of String, IColorManager)
@@ -171,6 +174,14 @@ Public Class Controls
                 MySimpleColMan.Mode = mode
             End If
         Next
+    End Sub
+
+    Private Sub ConsoleTxb_KeyDown(sender As Object, e As KeyEventArgs) Handles ConsoleTxb.KeyDown
+        If e.Key = Key.Enter Then
+            e.Handled = True
+            RaiseEvent CommandEntered(ConsoleTxb.Text)
+            ConsoleTxb.Text = ""
+        End If
     End Sub
 
 End Class

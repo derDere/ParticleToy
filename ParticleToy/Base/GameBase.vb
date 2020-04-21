@@ -16,9 +16,4 @@
 
     Public MustOverride Sub Draw(G As Graphics)
 
-    Public Enum ConsoleState
-        Closed = False
-        Open = True
-    End Enum
-
 End Class

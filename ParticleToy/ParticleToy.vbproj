@@ -150,8 +150,10 @@
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
     <Compile Include="Objekte\Behaviours\cRainbowCm.vb" />
+    <Compile Include="Objekte\Behaviours\cRingBh.vb" />
     <Compile Include="Objekte\Behaviours\cSilkBh.vb" />
     <Compile Include="Objekte\Behaviours\cSnakeBh.vb" />
+    <Compile Include="Objekte\Behaviours\cRingCm.vb" />
     <Compile Include="Objekte\Behaviours\cVideoCm.vb" />
     <Compile Include="Objekte\Behaviours\cImageCm.vb" />
     <Compile Include="Objekte\Behaviours\cMatrixBh.vb" />
@@ -201,10 +203,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Resources\Clownfishes_in_Anemone_800x600_muted_frames_jpg.zip" />
+    <None Include="Resources\ring.zip" />
     <None Include="Work\0-12+.pdn" />
     <None Include="Work\ants.pdn" />
     <None Include="Work\Font.pdn" />
     <None Include="Work\rainbow.pdn" />
+    <None Include="Work\ring.pdn" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
@@ -223,6 +227,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Resources\Icons\ring.png" />
     <None Include="Resources\Icons\right-click.png" />
     <None Include="Resources\Icons\color.png" />
     <None Include="Resources\Icons\game_of_life.png" />

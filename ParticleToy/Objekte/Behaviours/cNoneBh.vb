@@ -53,11 +53,11 @@ Public Class cNoneBh
             .CurrentColor = RandomColor()
             If TypeOf Game Is Game Then
                 Dim Game1 As Game = Game
-                If (RND.Next(1000000, 9000000) Mod 50000) = 0 Then
+                If chance(50000) Then
                     Game1.BlinkL.Add(New Blink(Particle.CurrentPosition, Game, .CurrentColor.Color))
                 End If
             End If
-            If (RND.Next(1000000, 9000000) Mod 5000) = 0 Then
+            If chance(5000) Then
                 Particle.BlinkCharTimer = 10
                 Particle.BlinkChar = RndChar()
             End If

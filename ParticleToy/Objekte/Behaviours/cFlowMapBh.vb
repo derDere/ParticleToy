@@ -52,12 +52,10 @@ Public Class cFlowMapBh
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
-            Dim noise As Single = SimplexNoise.Noise.CalcPixel3D(.CurrentPosition.X, .CurrentPosition.Y, Tick, SCALE)
+            Dim noise As Single = SimplexNoise.Noise.CalcPixel3D(.CurrentPosition.X, .CurrentPosition.Y, Tick * 2, SCALE)
             Dim m As Double = noise / 255
             Dim angle As Double = 360 * m
-            '.CurrentAngel = angle 'RndDirectedAngel(angle, 90)
-            '.TargetAngel = .CurrentAngel
-            .TargetAngel = RndDirectedAngel(angle, 90)
+            .TargetAngel = RndDirectedAngel(angle, 20)
         End With
         Return True
     End Function

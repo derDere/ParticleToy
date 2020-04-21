@@ -33,17 +33,23 @@ Public Class cVideoCm
 
     Public Property Mode As IColorManager.Modes = IColorManager.Modes.Replace Implements IColorManager.Mode
 
-    Public Sub New()
+    Public Sub New(empty As Boolean)
         Dim imgL As New List(Of Bitmap)
-        Using archive As New IO.Compression.ZipArchive(New IO.MemoryStream(My.Resources.Clownfishes_in_Anemone_800x600_muted_frames_jpg))
-            For Each entry As IO.Compression.ZipArchiveEntry In archive.Entries
-                Using entryStream As IO.Stream = entry.Open
-                    Dim b As New Bitmap(entryStream)
-                    imgL.AddRange({b}) ', b, b, b, b, b})
-                End Using
-            Next
-        End Using
+        If Not empty Then
+            Using archive As New IO.Compression.ZipArchive(New IO.MemoryStream(My.Resources.Clownfishes_in_Anemone_800x600_muted_frames_jpg))
+                For Each entry As IO.Compression.ZipArchiveEntry In archive.Entries
+                    Using entryStream As IO.Stream = entry.Open
+                        Dim b As New Bitmap(entryStream)
+                        imgL.AddRange({b}) ', b, b, b, b, b})
+                    End Using
+                Next
+            End Using
+        End If
         Images = imgL.ToArray
+    End Sub
+
+    Public Sub New()
+        Me.New(False)
     End Sub
 
     Public Function TurnOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Color? Implements IColorManager.TurnOn

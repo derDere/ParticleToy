@@ -2,6 +2,19 @@
 
 Module MathUtils
 
+    <DebuggerHidden>
+    Public Function chance(Value As Integer, Base As Integer) As Boolean
+        If (RND.Next(1000000, 9999999) Mod Base) <= (Value - 1) Then
+            Return True
+        End If
+        Return False
+    End Function
+
+    <DebuggerHidden>
+    Public Function chance(Base As Integer) As Boolean
+        Return chance(1, Base)
+    End Function
+
     <Extension>
     Public Function Add(P As PointF, X As Double, Y As Double) As PointF
         Return New PointF(P.X + X, P.Y + Y)
@@ -47,6 +60,7 @@ Module MathUtils
 
     <DebuggerHidden>
     Public Function RndDirectedAngel(Target As Double, Randomness As Double) As Double
+        If Randomness = 0 Then Return Target
         Dim Result As Double = Target
         Result -= (Randomness / 2)
         Result += RND.Next(Randomness * 1000) Mod Randomness

@@ -79,8 +79,13 @@ Public Class frmMain
         ModeForm.Owner = Me
         AddHandler ModeForm.ControlsEle.ModeSelect, AddressOf ModeForm_ModeSelected
         AddHandler ModeForm.ControlsEle.ColorSelect, AddressOf ModeForm_ColorSelected
+        AddHandler ModeForm.ControlsEle.CommandEntered, AddressOf ModeForm_CommandEntered
 
         ModeForm.Show()
+    End Sub
+
+    Private Sub ModeForm_CommandEntered(Command As String)
+        Game.HandleCommand(Command)
     End Sub
 
     Private Sub ModeForm_ColorSelected(CM As IColorManager)

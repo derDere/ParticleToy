@@ -127,8 +127,18 @@ Public Class Particle
 
         'Steuerung
         '#######################################################################################
-        If CurrentSpeed < TargetSpeed Then CurrentSpeed += IIf(CurrentSpeed > MAX_SPEED, 1, 0.5)
-        If CurrentSpeed > TargetSpeed Then CurrentSpeed -= IIf(CurrentSpeed > MAX_SPEED, 1, 0.5)
+        If CurrentSpeed <> TargetSpeed Then
+            Dim SpeedStepDirection As Double = IIf(TargetSpeed > CurrentSpeed, 1, -1)
+            Dim SpeedStepDelta As Double = (TargetSpeed - CurrentSpeed) * SpeedStepDirection
+            If CurrentSpeed > MAX_SPEED Then
+                If SpeedStepDelta > 1 Then SpeedStepDelta = 1
+            Else
+                If SpeedStepDelta > 0.5 Then SpeedStepDelta = 0.5
+            End If
+            CurrentSpeed += SpeedStepDirection * SpeedStepDelta
+        End If
+        'If CurrentSpeed < TargetSpeed Then CurrentSpeed += IIf(CurrentSpeed > MAX_SPEED, 1, 0.5)
+        'If CurrentSpeed > TargetSpeed Then CurrentSpeed -= IIf(CurrentSpeed > MAX_SPEED, 1, 0.5)
         Dim TurnDirection As Double = DegreeDirection(CurrentAngel, TargetAngel)
         CurrentAngel += (TURN_SPEED * TurnDirection)
         CurrentAngel = ValidDegrees(CurrentAngel)

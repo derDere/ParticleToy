@@ -77,7 +77,9 @@
         </Grid.RowDefinitions>
 
         <Button x:Name="BehaveTab" Grid.Column="0" Width="98" Tag="True">Modes</Button>
-        <Button x:Name="ColorTab" Grid.Column="1" Width="98">Colors</Button>
+        <Button x:Name="ColorTab" Grid.Column="1" Width="98">
+            <TextBlock><Run Foreground="CornflowerBlue">C</Run><Run Foreground="#FFBB64ED">o</Run><Run Foreground="#FFFF3D3D">l</Run><Run Foreground="#FFEDA864">o</Run><Run Foreground="#FFEDED64">r</Run><Run Foreground="#FF64ED64">s</Run></TextBlock>
+        </Button>
 
         <ScrollViewer x:Name="BehaveSV" Visibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="3">
             <ItemsControl x:Name="BehaveIC" DataContext="{Binding ElementName=UC, Path=BHs}" ItemsSource="{Binding}">
@@ -118,7 +120,31 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <TextBox x:Name="ConsoleTxb" Grid.Row="2" Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="CornflowerBlue"  Background="Black" Foreground="White" FontFamily="Consolas" Margin="1"/>
+        <TextBox
+            x:Name="ConsoleTxb"
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            BorderThickness="1"
+            BorderBrush="CornflowerBlue"
+            Foreground="White"
+            FontFamily="Consolas"
+            Margin="1">
+            <TextBox.Background>
+                <VisualBrush TileMode="None" ViewboxUnits="RelativeToBoundingBox">
+                    <VisualBrush.Visual>
+                        <Grid Background="Black"
+                              Width="{Binding ElementName=ConsoleTxb, Path=ActualWidth}"
+                              Height="{Binding ElementName=ConsoleTxb, Path=ActualHeight}">
+                            <ContentControl
+                                Margin="1 0 0 1"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Content="{Binding ElementName=ConsoleTxb, Path=Text}" />
+                        </Grid>
+                    </VisualBrush.Visual>
+                </VisualBrush>
+            </TextBox.Background>
+        </TextBox>
 
         <Grid Visibility="Collapsed">
             <Grid.ContextMenu>

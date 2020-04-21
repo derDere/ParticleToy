@@ -323,6 +323,26 @@ Namespace My.Resources
         '''<summary>
         '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property ring() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ring", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property ring_zip() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ring_zip", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property silk() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("silk", resourceCulture)
