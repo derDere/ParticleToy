@@ -73,7 +73,7 @@ Public Class cStaddyBh
                 .CurrentSpeed = APROACH_SPEED
             End If
             Dim G As Integer = 255 - (RND.Next(1000) Mod 64)
-            .CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, G, 192))
+            .CurrentColor = Color.FromArgb(255, 255, G, 192).ToPen
         End With
         Return True
     End Function

@@ -32,10 +32,10 @@ Public Class Particle
     Public Shared Gol_Matrix(GolQuader, GolQuader) As Particle
     Public GolMP As Point
 
-    Private Const SILK_GRID_WIDTH As Integer = 122
-    Private Const SILK_GRID_HEIGHT As Integer = 82
-    Private Const SILK_GRID_CELL_WIDTH As Double = Game.OPT_SIZE_W / (SILK_GRID_WIDTH + 1)
-    Private Const SILK_GRID_CELL_HEIGHT As Double = Game.OPT_SIZE_H / (SILK_GRID_HEIGHT + 1)
+    Public Const SILK_GRID_WIDTH As Integer = 122
+    Public Const SILK_GRID_HEIGHT As Integer = 82
+    Public Const SILK_GRID_CELL_WIDTH As Double = Game.OPT_SIZE_W / (SILK_GRID_WIDTH + 1)
+    Public Const SILK_GRID_CELL_HEIGHT As Double = Game.OPT_SIZE_H / (SILK_GRID_HEIGHT + 1)
 
     Public Sub New(Ancs As Anchors, Position As PointF, Index As Integer, Parent As Game)
         Me.Parent = Parent
@@ -70,6 +70,10 @@ Public Class Particle
         End If
     End Sub
 
+    Public Const DEFAULT_DRAW_LINE_DELTA As Double = 2
+    Public Const DEFAULT_MIN_MOVEMENT_DRAW_LENGTH As Double = 0
+    Public Const DEFAULT_DRAW_HIDDEN_LINE_POINT As Boolean = False
+
     Public Shared AnchorCenter As PointF? = Nothing
     Public Shared SortedAnchors As New List(Of PointF)
     Public WillGlow As Boolean = False
@@ -80,12 +84,13 @@ Public Class Particle
     Friend IsAStar As Boolean = False
     Friend Partner As Particle = Nothing
     Friend MirrorPoint As PointF? = Nothing
-    Friend MinMovementDrawLength As Double = 0
+    Friend MinMovementDrawLength As Double = DEFAULT_MIN_MOVEMENT_DRAW_LENGTH
     Friend GolStatusSet As Boolean = False
     Friend GolPositionFound As Boolean = False
     Friend FoundAnt As Boolean = False
-    Friend DrawLineDelta As Double = 2
+    Friend DrawLineDelta As Double = DEFAULT_DRAW_LINE_DELTA
     Friend drawColor As Pen = CurrentColor
+    Friend DrawHiddenLinePoint As Boolean = DEFAULT_DRAW_HIDDEN_LINE_POINT
 
     Public Sub Update(Game As GameBase, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard, OnBehaviour As IBehaviour, Behaviour As IBehaviour, OffBehaviour As IBehaviour, OnColorManager As IColorManager, ColorManager As IColorManager)
         'Normalisierung
@@ -260,7 +265,9 @@ Public Class Particle
             'Else
             '    G.DrawLine(CurrentColor, LastPosition, CurrentPosition)
         Else
-            Dim i = 0
+            If DrawHiddenLinePoint Then
+                G.FillRectangle(CurrentColorBru, CurrentPosition.X, CurrentPosition.Y, 1, 1)
+            End If
         End If
         If Glowing Then
             G.DrawRectangle(Pens.White, CurrentPosition.X - 1, CurrentPosition.Y - 1, 2, 2)

@@ -40,9 +40,13 @@ Public Class cSilkBh
     End Property
 
     Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
+        Particle.DrawHiddenLinePoint = Particle.DEFAULT_DRAW_HIDDEN_LINE_POINT
+        Particle.MinMovementDrawLength = Particle.DEFAULT_MIN_MOVEMENT_DRAW_LENGTH
     End Sub
 
     Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
+        Particle.DrawHiddenLinePoint = True
+        Particle.MinMovementDrawLength = 1
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave

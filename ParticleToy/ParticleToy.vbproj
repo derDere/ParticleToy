@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BitmapContent.vb" />
+    <Compile Include="Base\Config.vb" />
     <Compile Include="Base\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +150,7 @@
     <Compile Include="Objekte\Behaviours\cFlowMapBh.vb" />
     <Compile Include="Objekte\Behaviours\cGameOfLifeBh.vb" />
     <Compile Include="Objekte\Behaviours\cGroupedBh.vb" />
+    <Compile Include="Objekte\Behaviours\cPixelBh.vb" />
     <Compile Include="Objekte\Behaviours\cRainbowCm.vb" />
     <Compile Include="Objekte\Behaviours\cRingBh.vb" />
     <Compile Include="Objekte\Behaviours\cSilkBh.vb" />
@@ -209,6 +211,7 @@
     <None Include="Work\Font.pdn" />
     <None Include="Work\rainbow.pdn" />
     <None Include="Work\ring.pdn" />
+    <None Include="Work\white.pdn" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
@@ -227,6 +230,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ParticleToy.ico" />
+    <None Include="Work\IconFrames\ico_16.png" />
+    <None Include="Work\IconFrames\ico_24.png" />
+    <None Include="Work\IconFrames\ico_256.png" />
+    <None Include="Work\IconFrames\ico_32.png" />
+    <None Include="Work\IconFrames\ico_48.png" />
+    <None Include="Resources\white.png" />
+    <None Include="Resources\Icons\pixel.png" />
     <None Include="Resources\Icons\ring.png" />
     <None Include="Resources\Icons\right-click.png" />
     <None Include="Resources\Icons\color.png" />

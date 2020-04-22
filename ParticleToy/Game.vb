@@ -1,4 +1,5 @@
 ﻿Imports ParticleToy
+Imports ParticleToy.Behaviour
 
 Public Class Game
     Inherits GameBase
@@ -25,7 +26,7 @@ Public Class Game
     Public ClearBru As New SolidBrush(Color.FromArgb(BG_Alpha, 0, 0, 0))
 
     Public InfoBgBru As New SolidBrush(Color.FromArgb(192, 0, 0, 0))
-    Public InfoLinePen As New Pen(Brushes.White, 3)
+    Public InfoLinePen As New Pen(Color.White, 3)
     Public Font As New Font("Arial", 15)
 
     Private MousePos As PointF? = Nothing

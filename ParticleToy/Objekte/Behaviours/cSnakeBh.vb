@@ -75,7 +75,7 @@ Public Class cSnakeBh
                 If .Partner Is Nothing Then
                     Dim rest As Integer = .MyIndex Mod 1000
                     .Partner = Game.ParticleL(.MyIndex - rest)
-                    .CurrentColor = New Pen(.Partner.CurrentColor.Color.Randomize(100))
+                    .CurrentColor = .Partner.CurrentColor.Randomize(100)
                 End If
                 Dim delta As Double = DeltaBetweedFastest(.Partner.CurrentPosition, .CurrentPosition, Game.ScreenSize)
                 If delta < 20 Then

@@ -80,7 +80,7 @@ Public Class cRingBh
             If Math.Round(noise) Mod 50 = 0 Then
                 .CurrentColor = Pens.Black
             Else
-                .CurrentColor = New Pen(Drawing.Color.FromArgb(ALPHA, 3, 234, 255).Randomize(100))
+                .CurrentColor = Color.FromArgb(ALPHA, 3, 234, 255).Randomize(100).ToPen
             End If
         End With
         Return True

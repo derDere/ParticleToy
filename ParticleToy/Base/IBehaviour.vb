@@ -12,6 +12,10 @@ Public Interface IBehaviour
 
     ReadOnly Property OverwriteColorManager As Boolean
 
+    'ReadOnly Property IsSelected As Boolean
+
+    'ReadOnly Property IsUnlocked As Boolean
+
     Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
 
     Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard)
@@ -62,5 +66,28 @@ Namespace Behaviour
 
             Return Color.FromArgb(Color.A, R, G, B)
         End Function
+
+        <DebuggerHidden>
+        <Extension>
+        Public Function Randomize(P As Pen, Amount As Integer) As Pen
+            Dim p2 As Pen = P.Clone
+            p2.Color = P.Color.Randomize(Amount)
+            Return p2
+        End Function
+
+        <DebuggerHidden>
+        <Extension>
+        Public Function SetAlpha(P As Pen, Alpha As Integer) As Pen
+            Dim p2 As Pen = P.Clone
+            p2.Color = Color.FromArgb(Alpha, P.Color)
+            Return p2
+        End Function
+
+        <DebuggerHidden>
+        <Extension>
+        Public Function ToPen(C As Drawing.Color, Optional Width As Integer = 1) As Pen
+            Return New Pen(C, Width)
+        End Function
+
     End Module
 End Namespace

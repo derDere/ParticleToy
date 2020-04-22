@@ -1,4 +1,5 @@
 ﻿Imports System.Runtime.CompilerServices
+Imports ParticleToy.Behaviour
 
 Module MathUtils
 
@@ -41,7 +42,7 @@ Module MathUtils
     <DebuggerHidden>
     Public Function RandomColor() As Pen
         Dim I As Integer = RND.Next(1000000) Mod KnownColorCount
-        Return New Pen(Color.FromKnownColor(KnownColors(I)))
+        Return Color.FromKnownColor(KnownColors(I)).ToPen
     End Function
 
     <DebuggerHidden>

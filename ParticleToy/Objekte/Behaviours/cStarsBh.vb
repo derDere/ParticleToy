@@ -66,13 +66,13 @@ Public Class cStarsBh
             Dim ColorVal As Integer = 255 - ((2 - .TargetSpeed) * 100)
             Select Case ColorPart
                 Case 2
-                    .CurrentColor = New Pen(Drawing.Color.FromArgb(255, ColorVal - RedLevel, ColorVal - RedLevel, ColorVal))
+                    .CurrentColor = Color.FromArgb(255, ColorVal - RedLevel, ColorVal - RedLevel, ColorVal).ToPen
                 Case 1
-                    .CurrentColor = New Pen(Drawing.Color.FromArgb(255, ColorVal - RedLevel, ColorVal, ColorVal - RedLevel))
+                    .CurrentColor = Color.FromArgb(255, ColorVal - RedLevel, ColorVal, ColorVal - RedLevel).ToPen
                 Case 0
-                    .CurrentColor = New Pen(Drawing.Color.FromArgb(255, ColorVal, ColorVal - RedLevel, ColorVal - RedLevel))
+                    .CurrentColor = Color.FromArgb(255, ColorVal, ColorVal - RedLevel, ColorVal - RedLevel).ToPen
                 Case Else
-                    .CurrentColor = New Pen(Drawing.Color.FromArgb(255, ColorVal - (RedLevel * 0.3333), ColorVal - RedLevel, ColorVal))
+                    .CurrentColor = Color.FromArgb(255, ColorVal - (RedLevel * 0.3333), ColorVal - RedLevel, ColorVal).ToPen
             End Select
         End With
         Return True

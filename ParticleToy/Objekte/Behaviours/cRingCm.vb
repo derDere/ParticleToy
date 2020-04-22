@@ -38,62 +38,91 @@ Public Class cRingCm
     Public Sub New()
         Dim FrameDict As New Dictionary(Of String, Bitmap)
 
+        Dim Keys As New List(Of String)
+
         Using archive As New IO.Compression.ZipArchive(New IO.MemoryStream(My.Resources.ring_zip))
             For Each entry As IO.Compression.ZipArchiveEntry In archive.Entries
                 Using entryStream As IO.Stream = entry.Open
                     Dim b As New Bitmap(entryStream)
+                    Keys.Add(entry.Name.Replace(".PNG", ""))
                     FrameDict.Add(entry.Name.Replace(".PNG", ""), b)
                 End Using
             Next
         End Using
 
-        Dim order As String() = {
-            "white",
-            "chair",
-            "white",
-            "deer",
-            "white",
-            "face",
-            "white",
-            "fingers",
-            "white",
-            "fire",
-            "white",
-            "her",
-            "white",
-            "house",
-            "white",
-            "mirror",
-            "white",
-            "moon",
-            "white",
-            "ring",
-            "white",
-            "ring",
-            "white",
-            "mouth",
-            "white",
-            "nail",
-            "white",
-            "noise",
-            "white",
-            "table",
-            "white",
-            "tree",
-            "white",
-            "water",
-            "white",
-            "well",
-            "white",
-            "white",
-            "wind",
-            "white",
-            "worms"
-        }
+        Keys.Remove("ring")
+
+        Dim order As New List(Of String)
+        While Keys.Count > 0
+            Dim key As String = Keys(RND.Next(10000, 99999) Mod Keys.Count)
+            Keys.Remove(key)
+            order.Add(key)
+        End While
+
+        'Dim order As String() = {
+        '    "white",
+        '    "chair",
+        '    "white",
+        '    "deer",
+        '    "white",
+        '    "face",
+        '    "white",
+        '    "fingers",
+        '    "white",
+        '    "fire",
+        '    "white",
+        '    "her",
+        '    "white",
+        '    "house",
+        '    "white",
+        '    "mirror",
+        '    "white",
+        '    "moon",
+        '    "white",
+        '    "ring",
+        '    "white",
+        '    "ring",
+        '    "white",
+        '    "mouth",
+        '    "white",
+        '    "nail",
+        '    "white",
+        '    "noise",
+        '    "white",
+        '    "table",
+        '    "white",
+        '    "tree",
+        '    "white",
+        '    "water",
+        '    "white",
+        '    "well",
+        '    "white",
+        '    "white",
+        '    "wind",
+        '    "white",
+        '    "worms"
+        '}
 
         Dim imgL As New List(Of Bitmap)
         For Each frame In order
-            For n = 1 To (FRAME_LENGTH + (RND.Next(1000, 9999) Mod 20))
+            Dim frameCount As Integer = (RND.Next(1000, 9999) Mod 5) + 5
+            If chance(3) Then
+                Dim whiteCount As Integer = (RND.Next(1000, 9999) Mod 4) + 1
+                For n = 1 To whiteCount
+                    imgL.Add(My.Resources.white)
+                Next
+            End If
+            If chance(3) Then
+                Dim ringCount As Integer = (RND.Next(1000, 9999) Mod 5) + 1
+                Dim whiteCount As Integer = (RND.Next(1000, 9999) Mod 4) + 1
+                For n = 1 To ringCount
+                    imgL.Add(FrameDict("ring"))
+                Next
+                For n = 1 To whiteCount
+                    imgL.Add(My.Resources.white)
+                Next
+            End If
+            For n = 1 To frameCount
                 imgL.Add(FrameDict(frame))
             Next
         Next

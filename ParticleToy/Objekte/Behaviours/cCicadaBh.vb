@@ -5,6 +5,7 @@ Imports ParticleToy.Behaviour
 Public Class cCicadaBh
     Implements IBehaviour
 
+    Private Const ALPHA As Integer = 32
     Private CicadaImg As Bitmap = My.Resources.b1
     Private P1 As New PointF(150, 250)
     Private P2 As New PointF(400, 250)
@@ -49,13 +50,13 @@ Public Class cCicadaBh
     'End Sub
 
     Public Sub TurnedOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOn
-        Particle.CurrentColor = Pens.Silver
+        Particle.CurrentColor = Pens.Silver.SetAlpha(ALPHA)
     End Sub
 
     Public Function Behave(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) As Boolean Implements IBehaviour.Behave
         With Particle
             If .FoundAnt Then
-                .CurrentColor = Pens.White
+                .CurrentColor = Pens.White.SetAlpha(ALPHA)
             End If
             Dim targetPoint As PointF = P1
             If (.MyIndex Mod 3) = 1 Then targetPoint = P2

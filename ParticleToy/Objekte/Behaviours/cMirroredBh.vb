@@ -71,7 +71,7 @@ Public Class cMirroredBh
                 Else
                     G = 255 - (G - 128)
                 End If
-                .CurrentColor = New Pen(Drawing.Color.FromArgb(255, 255, 0, G))
+                .CurrentColor = Color.FromArgb(255, 255, 0, G).ToPen
             Else
                 .LastPosition = New PointF(Game.ScreenSize.Width - .Partner.LastPosition.X, .Partner.LastPosition.Y)
                 .CurrentPosition = New PointF(Game.ScreenSize.Width - .Partner.CurrentPosition.X, .Partner.CurrentPosition.Y)
