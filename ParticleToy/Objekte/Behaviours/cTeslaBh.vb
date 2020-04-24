@@ -5,6 +5,18 @@ Imports ParticleToy.Behaviour
 Public Class cTeslaBh
     Implements IBehaviour
 
+    Public ReadOnly Property IsSelected As String Implements IBehaviour.IsSelected
+        Get
+            Return Game.BehaviourKey = Key
+        End Get
+    End Property
+
+    Public ReadOnly Property IsUnlocked As Boolean Implements IBehaviour.IsUnlocked
+        Get
+            Return Config.Unlocked.Contains(Key)
+        End Get
+    End Property
+
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
             Return "1"

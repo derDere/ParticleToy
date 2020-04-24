@@ -20,9 +20,9 @@
 
     Property Mode As Modes
 
-    'ReadOnly Property IsSelected As Boolean
+    ReadOnly Property IsSelected As String
 
-    'ReadOnly Property IsUnlocked As Boolean
+    ReadOnly Property IsUnlocked As Boolean
 
     Function TurnOn(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Microsoft.VisualBasic.Devices.Keyboard) As Color?
 

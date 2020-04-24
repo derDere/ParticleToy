@@ -7,6 +7,18 @@ Public Class cRainbowCm
 
     Private Const SCALE As Single = 0.0075
 
+    Public ReadOnly Property IsSelected As String Implements IColorManager.IsSelected
+        Get
+            Return Game.ColorManager Is Me
+        End Get
+    End Property
+
+    Public ReadOnly Property IsUnlocked As Boolean Implements IColorManager.IsUnlocked
+        Get
+            Return Config.Unlocked.Contains(Key)
+        End Get
+    End Property
+
     Public ReadOnly Property Key As String Implements IColorManager.Key
         Get
             Return "rainbow"

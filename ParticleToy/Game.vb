@@ -47,11 +47,12 @@ Public Class Game
     Public Const PARTICLE_NUMBER As Integer = 10000
     Public Const HINT_TICK_LENGTH As Integer = 50
 
-    Public ColorManager As IColorManager = Nothing
+    Public Shared ColorManager As IColorManager = Nothing
 
     Private LastColorManager As IColorManager = Nothing
 
     Private LastBehaviourKey As String = "unknown"
+    Public Shared BehaviourKey As String = ""
 
     Private _CurrentTick As Integer = 0
     Public ReadOnly Property CurrentTick As Integer
@@ -90,25 +91,27 @@ Public Class Game
                 End If
             End If
             Dim FunctionKeySetAncorCount As Integer = 0
-            If Keyboard.Pressed(Keys.F1) Then FunctionKeySetAncorCount = 1
-            If Keyboard.Pressed(Keys.F2) Then FunctionKeySetAncorCount = 2
-            If Keyboard.Pressed(Keys.F3) Then FunctionKeySetAncorCount = 3
-            If Keyboard.Pressed(Keys.F4) Then FunctionKeySetAncorCount = 4
-            If Keyboard.Pressed(Keys.F5) Then FunctionKeySetAncorCount = 5
-            If Keyboard.Pressed(Keys.F6) Then FunctionKeySetAncorCount = 6
-            If Keyboard.Pressed(Keys.F7) Then FunctionKeySetAncorCount = 7
-            If Keyboard.Pressed(Keys.F8) Then FunctionKeySetAncorCount = 8
-            If Keyboard.Pressed(Keys.F9) Then FunctionKeySetAncorCount = 9
-            If Keyboard.Pressed(Keys.F10) Then FunctionKeySetAncorCount = 10
-            If Keyboard.Pressed(Keys.F11) Then FunctionKeySetAncorCount = 11
-            If Keyboard.Pressed(Keys.F12) Then FunctionKeySetAncorCount = 12
+            If Keyboard.Pressed(Keys.D1) Then FunctionKeySetAncorCount = 1
+            If Keyboard.Pressed(Keys.D2) Then FunctionKeySetAncorCount = 2
+            If Keyboard.Pressed(Keys.D3) Then FunctionKeySetAncorCount = 3
+            If Keyboard.Pressed(Keys.D4) Then FunctionKeySetAncorCount = 4
+            If Keyboard.Pressed(Keys.D5) Then FunctionKeySetAncorCount = 5
+            If Keyboard.Pressed(Keys.D6) Then FunctionKeySetAncorCount = 6
+            If Keyboard.Pressed(Keys.D7) Then FunctionKeySetAncorCount = 7
+            If Keyboard.Pressed(Keys.D8) Then FunctionKeySetAncorCount = 8
+            If Keyboard.Pressed(Keys.D9) Then FunctionKeySetAncorCount = 9
+            If Keyboard.Pressed(Keys.D0) Then FunctionKeySetAncorCount = 10
+            If Keyboard.Pressed(Keys.Oem4) Then FunctionKeySetAncorCount = 11
+            If Keyboard.Pressed(Keys.Oem6) Then FunctionKeySetAncorCount = 12
             If FunctionKeySetAncorCount <> 0 Then
-                SetAnchorCount(FunctionKeySetAncorCount)
+                If Config.Unlocked.Contains(FunctionKeySetAncorCount.ToString) Then
+                    SetAnchorCount(FunctionKeySetAncorCount)
+                End If
             End If
             Ancs.Anchors.AddRange(FixedAncors.Anchors.ToArray)
             If Not DrawInfo Then
                 Console.Update(Me, Tick, MouseInfo, Keyboard)
-                Dim BehaviourKey As String = ""
+                BehaviourKey = ""
                 If String.IsNullOrEmpty(Console.EnteredMode) Or String.IsNullOrWhiteSpace(Console.EnteredMode) Then
                     BehaviourKey = Ancs.Anchors.Count
                 Else
@@ -117,11 +120,17 @@ Public Class Game
                 If Not Controls.Behaviours.ContainsKey(BehaviourKey) Then
                     BehaviourKey = "unknown"
                 End If
+                If Not Config.Unlocked.Contains(BehaviourKey) Then
+                    Console.AddLine("Unloked mode: " & Controls.Behaviours(BehaviourKey).Name)
+                    Config.Unlocked.Add(BehaviourKey)
+                    Controls.Update()
+                End If
                 Dim CurrentBehaviour As IBehaviour = Controls.Behaviours(BehaviourKey)
 
                 Dim OffBehaviour As IBehaviour = Nothing
                 Dim OnBehaviour As IBehaviour = Nothing
                 If LastBehaviourKey <> BehaviourKey Then
+                    Controls.Update()
                     OffBehaviour = Controls.Behaviours(LastBehaviourKey)
                     OnBehaviour = Controls.Behaviours(BehaviourKey)
                     LastBehaviourKey = BehaviourKey
@@ -134,6 +143,7 @@ Public Class Game
 
                 Dim OnColorManager As IColorManager = Nothing
                 If LastColorManager IsNot ColorManager Then
+                    Controls.Update()
                     OnColorManager = ColorManager
                     LastColorManager = ColorManager
                 End If

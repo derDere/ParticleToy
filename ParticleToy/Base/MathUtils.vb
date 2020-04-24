@@ -3,6 +3,34 @@ Imports ParticleToy.Behaviour
 
 Module MathUtils
 
+    <Extension>
+    <DebuggerHidden>
+    Public Function Add(Of T)(ByRef Arr As T(), Itm As T) As T()
+        Dim L As New List(Of T)
+        L.AddRange(Arr)
+        L.Add(Itm)
+        Arr = L.ToArray
+        Return Arr
+    End Function
+
+    <Extension>
+    <DebuggerHidden>
+    Public Function Floor(P As PointF) As Point
+        Return New Point(Math.Floor(P.X), Math.Floor(P.Y))
+    End Function
+
+    <Extension>
+    <DebuggerHidden>
+    Public Function Ceiling(P As PointF) As Point
+        Return New Point(Math.Ceiling(P.X), Math.Ceiling(P.Y))
+    End Function
+
+    <Extension>
+    <DebuggerHidden>
+    Public Function Round(P As PointF) As Point
+        Return New Point(Math.Round(P.X), Math.Round(P.Y))
+    End Function
+
     <DebuggerHidden>
     Public Function chance(Value As Integer, Base As Integer) As Boolean
         If (RND.Next(1000000, 9999999) Mod Base) <= (Value - 1) Then

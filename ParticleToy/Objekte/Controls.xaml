@@ -91,7 +91,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="local:IBehaviour">
-                        <Button Click="BehaveButton_Click" Width="48" Height="48" Padding="0">
+                        <Button Click="BehaveButton_Click" Width="48" Height="48" Padding="0" IsEnabled="{Binding IsUnlocked}" Tag="{Binding IsSelected}">
                             <local:BitmapContent Width="32" Height="32" Image="{Binding Icon}"/>
                         </Button>
                     </DataTemplate>
@@ -109,7 +109,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="local:IColorManager">
-                        <Button MouseUp="ColorButton_MouseUp" Click="ColorButton_Click" Width="48" Height="48" Padding="0">
+                        <Button MouseUp="ColorButton_MouseUp" Click="ColorButton_Click" Width="48" Height="48" Padding="0" Tag="{Binding IsSelected}" IsEnabled="{Binding IsUnlocked}">
                             <Grid>
                                 <local:BitmapContent Width="32" Height="32" Image="{Binding Icon}"/>
                                 <local:BitmapContent Width="9" Height="13" Visibility="Collapsed" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="1" IsRightClickIcon="{Binding Name}"/>

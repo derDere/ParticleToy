@@ -19,7 +19,7 @@ Public Class frmMain
     Private RecordingFrame As Integer = 0
     Private RecordingDir As IO.DirectoryInfo = Nothing
 
-    Private Game As Game = New Game
+    Friend Shared Game As Game = New Game
     Private Tick As Integer = 0
     Private B As Bitmap
     Private ModeForm As New frmModes
@@ -107,17 +107,44 @@ Public Class frmMain
         SW.Start()
 
         Dim mi As MouseInfo
+        Dim GameMousePos As PointF? = Nothing
         If RealMP IsNot Nothing Then
-            Dim pX As Double = RealMP.Value.X / (ScreenImgBox.Width + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
-            If pX > My.Computer.Screen.WorkingArea.Width Then pX = My.Computer.Screen.WorkingArea.Width
-            Dim mouseX As Double = (pX * Game.ScreenSize.Width)
-            Dim pY As Double = RealMP.Value.Y / (ScreenImgBox.Height + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
-            If pY > My.Computer.Screen.WorkingArea.Height Then pY = My.Computer.Screen.WorkingArea.Height
-            Dim mouseY As Double = (pY * Game.ScreenSize.Height)
-            mi = New MouseInfo(MouseL, MouseR, MouseM, New PointF(mouseX, mouseY), MouseW, My.Computer.Mouse)
+            Dim wDelta As Double = ScreenImgBox.Width - Game.ScreenSize.Width
+            Dim hDelta As Double = ScreenImgBox.Height - Game.ScreenSize.Height
+            Dim imgW As Double = Game.ScreenSize.Width
+            Dim imgH As Double = Game.ScreenSize.Height
+            Dim zoom As Double = 1
+            If wDelta > hDelta Then
+                zoom = ScreenImgBox.Height / Game.ScreenSize.Height
+            ElseIf hDelta > wDelta Then
+                zoom = ScreenImgBox.Width / Game.ScreenSize.Width
+            End If
+            If zoom > 0 Then
+                imgW *= zoom
+                imgH *= zoom
+                Dim offX As Double = (ScreenImgBox.Width - imgW) / 2
+                Dim offY As Double = (ScreenImgBox.Height - imgH) / 2
+
+                Dim pX As Double = (RealMP.Value.X - offX) / imgW
+                Dim pY As Double = (RealMP.Value.Y - offY) / imgH
+                Dim X As Double = pX * Game.ScreenSize.Width
+                Dim Y As Double = pY * Game.ScreenSize.Height
+                If X >= 0 AndAlso X < Game.ScreenSize.Width AndAlso Y >= 0 AndAlso Y < Game.ScreenSize.Height Then
+                    GameMousePos = New PointF(X, Y)
+                End If
+            End If
+
+            '' ''  OLD  '' ''       Dim pX As Double = RealMP.Value.X / (ScreenImgBox.Width + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
+            '' ''  OLD  '' ''       If pX > My.Computer.Screen.WorkingArea.Width Then pX = My.Computer.Screen.WorkingArea.Width
+            '' ''  OLD  '' ''       Dim mouseX As Double = (pX * Game.ScreenSize.Width)
+            '' ''  OLD  '' ''       Dim pY As Double = RealMP.Value.Y / (ScreenImgBox.Height + 0.00001D) 'Verhindert Division durch 0 falls Fenster Minimiert
+            '' ''  OLD  '' ''       If pY > My.Computer.Screen.WorkingArea.Height Then pY = My.Computer.Screen.WorkingArea.Height
+            '' ''  OLD  '' ''       Dim mouseY As Double = (pY * Game.ScreenSize.Height)
+            '' ''  OLD  '' ''       mi = New MouseInfo(MouseL, MouseR, MouseM, New PointF(mouseX, mouseY), MouseW, My.Computer.Mouse)
         Else
-            mi = New MouseInfo(MouseL, MouseR, MouseM, Nothing, MouseW, My.Computer.Mouse)
+            '' ''  OLD  '' ''       mi = New MouseInfo(MouseL, MouseR, MouseM, Nothing, MouseW, My.Computer.Mouse)
         End If
+        mi = New MouseInfo(MouseL, MouseR, MouseM, GameMousePos, MouseW, My.Computer.Mouse)
 
         Dim KeyInf As New KeyBoardInfo
         KeyInf.KeysDown = PressedKeys.ToArray
@@ -204,7 +231,7 @@ Public Class frmMain
     Private Sub frmMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         If Not PressedKeys.Contains(e.KeyCode) Then _
             PressedKeys.Add(e.KeyCode)
-        If e.KeyCode = Keys.F11 AndAlso e.Modifiers = Keys.Control Then
+        If e.KeyCode = Keys.F11 Then
             FullScreen = Not FullScreen
         End If
         If e.KeyCode = Keys.R Then

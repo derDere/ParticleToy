@@ -12,6 +12,18 @@ Public Class cCicadaBh
     Private P3 As New PointF(650, 250)
     Private ColMan As New SimpleColorManager(Color.White, 100) With {.Mode = IColorManager.Modes.Multiply}
 
+    Public ReadOnly Property IsSelected As String Implements IBehaviour.IsSelected
+        Get
+            Return Game.BehaviourKey = Key
+        End Get
+    End Property
+
+    Public ReadOnly Property IsUnlocked As Boolean Implements IBehaviour.IsUnlocked
+        Get
+            Return Config.Unlocked.Contains(Key)
+        End Get
+    End Property
+
     Public ReadOnly Property Key As String Implements IBehaviour.Key
         Get
             Return "cicada"

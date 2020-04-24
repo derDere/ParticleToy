@@ -3,6 +3,14 @@ Imports System.Windows.Input
 
 Public Class Controls
 
+    Private BehaviourAppendents As String = ""
+
+    Private Shared Event UpdateControls()
+
+    Public Shared Sub Update()
+        RaiseEvent UpdateControls()
+    End Sub
+
     Private WithEvents ColorPickerDialog As New System.Windows.Forms.ColorDialog With {
         .FullOpen = True,
         .AllowFullOpen = True,
@@ -90,11 +98,17 @@ Public Class Controls
                     MySimpleColMan = ICmObj
                     MySimpleColMan.Mode = IColorManager.Modes.Replace
                     MySimpleColMan.RefreshMode = True
+                    MySimpleColMan.ColorObjGuid = New Guid
                 End If
                 ColorManagers.Add(ICmObj.Key, ICmObj)
             End If
         Next
 
+        AddHandler Controls.UpdateControls, AddressOf UpdateControlBindings
+        UpdateControlBindings()
+    End Sub
+
+    Private Sub UpdateControlBindings()
         BehaveIC.GetBindingExpression(DataContextProperty).UpdateTarget()
         ColorIC.GetBindingExpression(DataContextProperty).UpdateTarget()
     End Sub
@@ -119,6 +133,11 @@ Public Class Controls
             If TypeOf btn.DataContext Is IBehaviour Then
                 Dim behv As IBehaviour = btn.DataContext
                 RaiseEvent ModeSelect(behv.Key)
+                BehaviourAppendents &= behv.Key
+                If BehaviourAppendents.Length > 200 Then
+                    BehaviourAppendents = BehaviourAppendents.Substring(BehaviourAppendents.Length - 200)
+                End If
+                CheckBehaviourAppendents()
             End If
         End If
     End Sub
@@ -181,6 +200,36 @@ Public Class Controls
             e.Handled = True
             RaiseEvent CommandEntered(ConsoleTxb.Text)
             ConsoleTxb.Text = ""
+        End If
+    End Sub
+
+    Private Sub CheckBehaviourAppendents()
+        If BehaviourAppendents.EndsWith("3301") Then
+            If Not Config.Unlocked.Contains("cicada") Then
+                Config.Unlocked.Add("cicada")
+                frmMain.Game.Console.AddLine("Unlocked mode: " & Behaviours("cicada").Name)
+                UpdateControlBindings()
+                RaiseEvent ModeSelect("cicada")
+            End If
+        End If
+        If Config.Unlocked.Contains("0") _
+        AndAlso Config.Unlocked.Contains("1") _
+        AndAlso Config.Unlocked.Contains("2") _
+        AndAlso Config.Unlocked.Contains("3") _
+        AndAlso Config.Unlocked.Contains("4") _
+        AndAlso Config.Unlocked.Contains("5") _
+        AndAlso Config.Unlocked.Contains("6") _
+        AndAlso Config.Unlocked.Contains("7") _
+        AndAlso Config.Unlocked.Contains("8") _
+        AndAlso Config.Unlocked.Contains("9") _
+        AndAlso Config.Unlocked.Contains("10") _
+        AndAlso Config.Unlocked.Contains("11") _
+        AndAlso Config.Unlocked.Contains("12") Then
+            If Not Config.Unlocked.Contains(MySimpleColMan.Key) Then
+                Config.Unlocked.Add(MySimpleColMan.Key)
+                frmMain.Game.Console.AddLine("Unlocked color: " & MySimpleColMan.Name)
+                UpdateControlBindings()
+            End If
         End If
     End Sub
 

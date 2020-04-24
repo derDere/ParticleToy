@@ -37,6 +37,18 @@ Public Class cAntsBh
         End Get
     End Property
 
+    Public ReadOnly Property IsSelected As String Implements IBehaviour.IsSelected
+        Get
+            Return Game.BehaviourKey = Key
+        End Get
+    End Property
+
+    Public ReadOnly Property IsUnlocked As Boolean Implements IBehaviour.IsUnlocked
+        Get
+            Return Config.Unlocked.Contains(Key)
+        End Get
+    End Property
+
     Public Sub TurnedOff(Particle As Particle, Game As Game, Tick As Integer, MouseInfo As MouseInfo, Keyboard As Keyboard) Implements IBehaviour.TurnedOff
         Particle.Partner = Nothing
         Particle.FoundAnt = False
